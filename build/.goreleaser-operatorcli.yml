@@ -1,0 +1,101 @@
+# This is a basic GoReleaser config file that builds a Go project.
+
+# Defines the project's build configuration
+builds:
+  - 
+    # The ID of the build, useful when you have multiple builds
+    id: "operator-cli"
+
+    # Path to the main.go file or the directory containing the main package.
+    # You can specify multiple paths if your project consists of multiple binaries.
+    main: ./cmd/operatorcli/main.go
+
+    # Target platforms
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+    # Custom build flags can be added here
+    # flags:
+    #   - -tags=netgo
+
+    # Environment variables to set during the build, such as Go modules on proxy settings
+    # env:
+    #   - GO111MODULE=on
+    #   - GOPROXY=https://proxy.golang.org
+
+    # Indicates if the binary should be archived (default is true).
+    # If set to false, the binary will be placed in the dist folder without being zipped/tarred.
+    # archive:
+    #   format: zip
+
+    # Custom binary name template
+    # binary: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  # Specifies the name of the checksum file. You can include template directives.
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+
+  # Specifies the algorithm to be used for calculating the checksum. Common options include sha256 and sha512.
+  algorithm: sha256
+
+dockers:
+  -
+    # Specifies the Docker image's name (repository). You can use templating here as well.
+    image_templates:
+      - "eoracle/opr_cli:{{ .Tag }}-amd64"
+
+    # Path to the Dockerfile (relative to the project root)
+    dockerfile: "Dockerfile-oprcli"
+    extra_files:
+      - "cmd"
+      - "contracts"
+      - "internal"
+      - "Makefile"
+      - "go.mod"
+      - "go.sum"
+      - "docker-entrypoint-oprcli.sh"
+    goos: linux
+    goarch: amd64
+    build_flag_templates:
+      - "--platform"
+      - "linux/amd64"
+      - "--build-arg"
+      - "ARCH=amd64"
+  -
+    # Specifies the Docker image's name (repository). You can use templating here as well.
+    image_templates:
+      - "eoracle/opr_cli:{{ .Tag }}-arm64"
+
+    # Path to the Dockerfile (relative to the project root)
+    dockerfile: "Dockerfile-oprcli"
+    extra_files:
+      - "cmd"
+      - "contracts"
+      - "internal"
+      - "Makefile"
+      - "go.mod"
+      - "go.sum"
+      - "docker-entrypoint-oprcli.sh"
+    goos: linux
+    goarch: arm64
+    build_flag_templates:
+      - "--platform"
+      - "linux/arm64"
+      - "--build-arg"
+      - "ARCH=arm64"
+docker_manifests:
+  -
+    name_template: "eoracle/opr_cli:{{ .Tag }}"
+    image_templates:
+      - "eoracle/opr_cli:{{ .Tag }}-amd64"
+      - "eoracle/opr_cli:{{ .Tag }}-arm64"
+ 
+# You can define additional sections below to customize GoReleaser further, such as:
+# - release configuration
+# - snapshot configuration
+# - archive customization
+# - etc.
