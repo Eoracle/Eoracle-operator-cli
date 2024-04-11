@@ -1,0 +1,21 @@
+name: Enforce Branch Name
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  enforce_branch_name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Branch Name
+        run: |
+          regular_branch_pattern='^DEV-[0-9]{3,}.*$'
+          hotfix_branch_pattern='^HF-.*$'
+          branch_name=$(echo $GITHUB_REF | sed 's/refs\/heads\///')
+          if [[ ! $branch_name =~ $regular_zranch_patter && ! $branch_name =~ $hotfix_branch_pattern ]]; then
+            echo "Branch name $branch_name does not match the required patterns."
+            exit 1
+          fi

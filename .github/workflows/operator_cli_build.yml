@@ -1,0 +1,60 @@
+name: Operator CLI Build
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  go_build:
+    name: Operator CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0 
+
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.0.0
+
+      - name: Build Operator CLI
+        run: |
+          make build-oprcli-arm64
+          make build-oprcli-amd64
+
+      - name: 'Reproduce Builds'
+        run: |
+          cp bin/oprcli-arm64 bin/oprcli-arm64-1
+          cp bin/oprcli-amd64 bin/oprcli-amd64-1
+          make build-oprcli-arm64
+          make build-oprcli-amd64
+
+          buildsha1=$(shasum -a256 ./oprcli-arm64-1 | awk '{print $1}')
+          buildsha2=$(shasum -a256 ./oprcli-arm64 | awk '{print $1}')
+
+          echo "Arm64 Build 1 SHA: $buildsha1"
+          echo "Arm64 Build 2 SHA: $buildsha2"
+
+          if [ "$buildsha1" != "$buildsha2" ]; then
+            echo "Arm64 build artifact does not match original"
+            exit 1
+          else
+            echo "Arm64 Build artifact matches original"
+          fi
+
+          buildsha1=$(shasum -a256 ./oprcli-amd64-1 | awk '{print $1}')
+          buildsha2=$(shasum -a256 ./oprcli-amd64 | awk '{print $1}')
+
+          echo "Amd64 Build 1 SHA: $buildsha1"
+          echo "Amd64 Build 2 SHA: $buildsha2"
+
+          if [ "$buildsha1" != "$buildsha2" ]; then
+            echo "Amd64 build artifact does not match original"
+            exit 1
+          else
+            echo "Amd64 Build artifact matches original"
+          fi
