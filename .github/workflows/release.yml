@@ -1,0 +1,103 @@
+name: Release
+on:
+  push:
+    branches-ignore:
+      - '**'
+    tags:
+      - 'v*.*.*'
+      # to be used by fork patch-releases ^^
+      - 'v*.*.*-*'
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_CONFIG: $HOME/.docker
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+          
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.0.0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Run GoReleaser build
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          version: latest
+          args: build --clean --parallelism 3 --config build/.goreleaser-operatorcli.yml
+
+      - name: Check if the release already exists
+        id: check_release
+        run: |
+          if gh release view ${{ github.ref_name }} 2>/dev/null; then
+            echo "::set-output name=exists::true"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete existing release
+        if: steps.check_release.outputs.exists == 'true'
+        run: gh release delete ${{ github.ref_name }} -y
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run GoReleaser Release
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          version: latest
+          args: release --clean --parallelism 3 --config build/.goreleaser-operatorcli.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Save docker digest by tag
+        id: docker_digest_bytag
+        run: |
+          opr_cli_amd64=$(docker inspect eoracle/opr_cli:${{ github.ref_name }}-amd64 | jq -r '.[].RepoDigests[]')
+          opr_cli_arm64=$(docker inspect eoracle/opr_cli:${{ github.ref_name }}-arm64 | jq -r '.[].RepoDigests[]')
+          echo "eoracle/opr_cli:${{ github.ref_name }}-amd64: $opr_cli_amd64" > dockers_digest.txt
+          echo "eoracle/opr_cli:${{ github.ref_name }}-arm64: $opr_cli_arm64" >> dockers_digest.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update docker latest tag if needed
+        run: |
+          NEW_TAG="${{ github.ref_name }}"
+          HIGHEST_TAG=$(git tag | sort -V | tail -n 1)
+          if [ "$NEW_TAG" == "$HIGHEST_TAG" ]; then
+            export DOCKER_CLI_EXPERIMENTAL=enabled
+            docker tag eoracle/opr_cli:${{ github.ref_name }}-amd64 eoracle/opr_cli:latest-amd64
+            docker tag eoracle/opr_cli:${{ github.ref_name }}-arm64 eoracle/opr_cli:latest-arm64
+            docker push eoracle/opr_cli:latest-amd64
+            docker push eoracle/opr_cli:latest-arm64
+            docker manifest create eoracle/opr_cli:latest \
+              --amend eoracle/opr_cli:latest-amd64 \
+              --amend eoracle/opr_cli:latest-arm64
+            docker manifest push eoracle/opr_cli:latest
+            opr_cli_amd64=$(docker inspect eoracle/opr_cli:latest-amd64 | jq -r '.[].RepoDigests[]')
+            opr_cli_arm64=$(docker inspect eoracle/opr_cli:latest-arm64 | jq -r '.[].RepoDigests[]')
+            echo "eoracle/opr_cli:latest-amd64: $opr_cli_amd64" > dockers_digest.txt
+            echo "eoracle/opr_cli:latest-arm64: $opr_cli_arm64" >> dockers_digest.txt
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Docker digest file to GitHub release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dockers_digest.txt

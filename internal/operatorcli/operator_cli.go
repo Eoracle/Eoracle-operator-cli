@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/big"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -30,6 +31,7 @@ import (
 	regcoord "github.com/Eoracle/core-go/contracts/bindings/EORegistryCoordinator"
 	stakeregistry "github.com/Eoracle/core-go/contracts/bindings/EOStakeRegistry"
 
+	eoconfig "github.com/Eoracle/core-go/contracts/bindings/EOConfig"
 	"github.com/Eoracle/core-go/internal/flag"
 )
 
@@ -95,13 +97,23 @@ func RunDecrypt(c *cli.Context) error {
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error reading the ecdsaEncryptedWallet.json file %v", err), 1)
 	}
+	fmt.Println("ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "private key", hex.EncodeToString(ecdsaPair.D.Bytes()))
 
 	blsKeyPair, err := eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error reading the blsEncryptedWallet.json file %v", err), 1)
 	}
-	fmt.Println("ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "private key", hex.EncodeToString(ecdsaPair.D.Bytes()))
 	fmt.Println("bls address G1, G2 ", blsKeyPair.GetPubKeyG1().String(), ", ", blsKeyPair.GetPubKeyG2().String(), "private key", blsKeyPair.PrivKey.String())
+
+	ecdsaEOChainPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	if err != nil {
+		if err == os.ErrNotExist {
+			fmt.Println("EOChain alias was not set in the system")
+			return nil
+		}
+		return cli.Exit(fmt.Sprintf("Error reading the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
+	}
+	fmt.Println("EOChain ecdsa address ", crypto.PubkeyToAddress(ecdsaEOChainPair.PublicKey), "private key", hex.EncodeToString(ecdsaEOChainPair.D.Bytes()))
 
 	return nil
 }
@@ -114,7 +126,7 @@ func RunRegister(c *cli.Context) error {
 	var blsKeyPair *eigensdkbls.KeyPair
 	var err error
 
-	logger, err := logging.NewZapLogger(logging.Development)
+	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
@@ -216,7 +228,7 @@ func RunRegister(c *cli.Context) error {
 		PubkeyG2:                    G2pubkeyBN254,
 	}
 
-	// params to register operator in delegation manager's operator-avs mapping
+	// Params to register operator in delegation manager's operator-avs mapping
 	msgToSign, err := avsClient.elReader.CalculateOperatorAVSRegistrationDigestHash(
 		&bind.CallOpts{},
 		signerAddr,
@@ -231,9 +243,7 @@ func RunRegister(c *cli.Context) error {
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Failed to sign %v", err), 1)
 	}
-	// this is annoying, and not sure why its needed, but seems like some historical baggage
-	// see https://github.com/ethereum/go-ethereum/issues/28757#issuecomment-1874525854
-	// and https://twitter.com/pcaversaccio/status/1671488928262529031
+
 	operatorSignature[64] += 27
 	operatorSignatureWithSaltAndExpiry := regcoord.ISignatureUtilsSignatureWithSaltAndExpiry{
 		Signature: operatorSignature,
@@ -283,7 +293,7 @@ func RunDeregister(c *cli.Context) error {
 	var ecdsaPair *ecdsa.PrivateKey
 	var err error
 
-	logger, err := logging.NewZapLogger(logging.Development)
+	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
@@ -371,7 +381,7 @@ func RunPrintStatus(c *cli.Context) error {
 	var ecdsaPair *ecdsa.PrivateKey
 	var err error
 
-	logger, err := logging.NewZapLogger(logging.Development)
+	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
@@ -411,21 +421,34 @@ func RunPrintStatus(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Failed to create AVS client %v", err), 1)
 	}
 
-	status, err := avsClient.registryCoordinator.GetOperatorStatus(&bind.CallOpts{Context: context.Background()}, operatorAddress)
+	var zeroID [32]byte
+	id, err := avsClient.registryCoordinator.GetOperatorId(&bind.CallOpts{Context: context.Background()}, operatorAddress)
+	if (err != nil) || (id == zeroID) {
+		cli.Exit(fmt.Sprintf("Error while GetOperatorId %v", err), 1)
+	}
 
-	if (err != nil) || (status == 0) {
+	status, err := avsClient.registryCoordinator.GetOperatorStatus(&bind.CallOpts{Context: context.Background()}, operatorAddress)
+	if err != nil {
 		cli.Exit(fmt.Sprintf("Error while GetOperatorStatus %v", err), 1)
 	}
-	logger.Info("Operator Status", "status", status)
 
-	var paddedAddress [32]byte
-	copy(paddedAddress[:], operatorAddress.Bytes())
+	switch status {
+	case 0:
+		logger.Info("Operator Status", "status", "NEVER REGISTERED")
+	case 1:
+		logger.Info("Operator Status", "status", "REGISTERED")
+	case 2:
+		logger.Info("Operator Status", "status", "DEREGISTERED")
+	default:
+		cli.Exit(fmt.Sprintf("Unknown operator status %v", status), 1)
+	}
 
-	stake, err := avsClient.stakeRegistry.GetLatestStakeUpdate(&bind.CallOpts{Context: context.Background()}, paddedAddress, 0)
+	stake, err := avsClient.stakeRegistry.GetLatestStakeUpdate(&bind.CallOpts{Context: context.Background()}, id, uint8(c.Int(flag.QuorumNumberFlag.Name)))
 	if err != nil {
 		cli.Exit(fmt.Sprintf("Error while GetLatestStakeUpdate %v", err), 1)
 	}
-	logger.Info("Operator Latest Stake", "stake", stake)
+	logger.Info("Operator stake update", "stake", stake.Stake, "block number", stake.UpdateBlockNumber)
+
 	return nil
 }
 
@@ -437,6 +460,111 @@ func RunGenerateBLSKey(c *cli.Context) error {
 	fmt.Println("BLS private key", keyPair.PrivKey.String())
 	fmt.Println("BLS public key G1", keyPair.GetPubKeyG1().String())
 	fmt.Println("BLS public key G2", keyPair.GetPubKeyG2().String())
+	return nil
+}
+
+func RunEOChainSetAlias(c *cli.Context) error {
+	logger, err := logging.NewZapLogger(logging.Production)
+	if err != nil {
+		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
+	}
+
+	passphrase := c.String(flag.PassphraseFlag.Name)
+	if passphrase == "" {
+		return cli.Exit("passphrase is required", 1)
+	}
+
+	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
+	if keyStorePath == "" {
+		return cli.Exit("keystore-path is required", 1)
+	}
+	EthecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+	if err != nil {
+		return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
+	}
+	var ecdsaPair *ecdsa.PrivateKey
+	if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
+		// Use the private key passed in the command line
+		ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
+		}
+	} else {
+		// Generate a new key and save it to a faile
+		ecdsaPair, err = crypto.GenerateKey()
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("Failed to generate ECDSA key %v", err), 1)
+		}
+	}
+
+	// Save the private key to a file
+	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), ecdsaPair, passphrase); err != nil {
+		return cli.Exit(fmt.Sprintf("Error writing the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
+	}
+	fmt.Println("alias ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "saved")
+
+	if !c.Bool(flag.EncryptOnlyFlag.Name) {
+		// Update the alias in the eochain
+		if c.String(flag.EOChainEthRPCFlag.Name) == "" {
+			return cli.Exit("eochain-eth-rpc is required", 1)
+		}
+
+		if c.String(flag.EOConfigFlag.Name) == "" {
+			return cli.Exit("eoconfig is required", 1)
+		}
+		eoConfigAddr := gethcommon.HexToAddress(c.String(flag.EOConfigFlag.Name))
+
+		ethClient, err := eth.NewClient(c.String(flag.EOChainEthRPCFlag.Name))
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+		}
+
+		chainIDBigInt, err := ethClient.ChainID(context.Background())
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("cannot get chainId: %v", err), 1)
+		}
+
+		contractEOConfig, err := eoconfig.NewContractEOConfig(eoConfigAddr, ethClient)
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("Failed to bind the eoconfig contract %v", err), 1)
+		}
+
+		signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: EthecdsaPair}, chainIDBigInt)
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("error creating the signer function for %v %v", crypto.PubkeyToAddress(EthecdsaPair.PublicKey), err), 1)
+		}
+
+		txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("Failed to create transaction sender %v", err), 1)
+		}
+		txMgr := txmgr.NewSimpleTxManager(txSender, ethClient, logger, signerV2, signerAddr)
+
+		noSendTxOpts, err := txMgr.GetNoSendTxOpts()
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("error creating transaction object %v", err), 1)
+		}
+
+		tx, err := contractEOConfig.DeclareAlias(
+			noSendTxOpts,
+			crypto.PubkeyToAddress(ecdsaPair.PublicKey),
+		)
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("Failed to create EOConfig.SetAlias transaction %v", err), 1)
+		}
+
+		ctx := context.Background()
+		receipt, err := txMgr.Send(ctx, tx)
+		if err != nil {
+			return cli.Exit(fmt.Sprintf("setAlias transaction failed %s", err), 1)
+		}
+		if receipt.Status != 1 {
+			return cli.Exit(fmt.Sprintf("setAlias transaction %v reverted", receipt.TxHash.Hex()), 1)
+		}
+
+		logger.Info("succesfully set the alias in the eochain", "Ethereum address", signerAddr, "eochain address", crypto.PubkeyToAddress(EthecdsaPair.PublicKey), "tx hash", receipt.TxHash.Hex())
+
+	}
 	return nil
 }
 

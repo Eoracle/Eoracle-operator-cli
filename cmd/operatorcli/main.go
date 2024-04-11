@@ -73,6 +73,7 @@ var commandPrintStatus = &cli.Command{
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.EcdsaPrivateKeyFlag,
+		flag.QuorumNumberFlag,
 	},
 }
 
@@ -81,6 +82,20 @@ var commandGenerateBLSKey = &cli.Command{
 	Description: "Generate the BLS key",
 	Action:      runGenerateBLSKey,
 	Flags:       []cli.Flag{},
+}
+
+var commandEOChainSetAlias = &cli.Command{
+	Name:        "eochain-set-alias",
+	Description: "Create or Import a ECDSA private key only for oracle chain. The command can also update the eochain with the alias",
+	Action:      runEOChainSetAlias,
+	Flags:       []cli.Flag{
+		flag.EcdsaPrivateKeyFlag,
+		flag.PassphraseFlag,
+		flag.KeyStorePathFlag,
+		flag.EOChainEthRPCFlag,
+		flag.EncryptOnlyFlag,
+		flag.EOConfigFlag,
+	},
 }
 
 func main() {
@@ -95,6 +110,7 @@ func main() {
 		commandDeregister,
 		commandPrintStatus,
 		commandGenerateBLSKey,
+		commandEOChainSetAlias,
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -125,4 +141,8 @@ func runPrintStatus(c *cli.Context) error {
 
 func runGenerateBLSKey(c *cli.Context) error {
 	return operatorcli.RunGenerateBLSKey(c)
+}
+
+func runEOChainSetAlias(c *cli.Context) error {
+	return operatorcli.RunEOChainSetAlias(c)
 }
