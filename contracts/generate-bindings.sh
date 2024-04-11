@@ -58,3 +58,10 @@ for contract in $el_contracts; do
     create_binding ../../eoracle-middleware/lib/eigenlayer-contracts $contract ./bindings
     sleep 1
 done
+
+# Create bindings for the eoconfig contract in eochain
+eo_contracts="EOConfig"
+for contract in $eo_contracts; do
+    create_binding ../../lb-contracts $contract ./bindings
+    sleep 1
+done

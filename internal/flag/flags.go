@@ -79,4 +79,21 @@ var (
 		DefaultText: "0",
 		Value:       0,
 	}
+	EOChainEthRPCFlag = &cli.StringFlag{
+		Name:    "eochaineth-rpc",
+		Usage:   "eochain ethereum rpc url",
+		EnvVars: []string{"EO_CHAIN_ETH_RPC"},
+	}
+	EncryptOnlyFlag = &cli.BoolFlag{
+		Name:        "encrypt-only",
+		Usage:       "Indication if the key should be just encrypted",
+		EnvVars:     []string{"EO_CHAIN_ENCRYPT_ONLY"},
+		DefaultText: "False",
+		Value:       false,
+	}
+	EOConfigFlag = &cli.StringFlag{
+		Name:    "eoconfig",
+		Usage:   "eoconfig contract address",
+		EnvVars: []string{"EO_EOCONFIG"},
+	}
 )
