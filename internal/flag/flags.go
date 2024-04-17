@@ -82,7 +82,7 @@ var (
 	EOChainEthRPCFlag = &cli.StringFlag{
 		Name:    "eochaineth-rpc",
 		Usage:   "eochain ethereum rpc url",
-		EnvVars: []string{"EO_CHAIN_ETH_RPC"},
+		EnvVars: []string{"EO_CHAIN_RPC_ENDPOINT"},
 	}
 	EncryptOnlyFlag = &cli.BoolFlag{
 		Name:        "encrypt-only",
