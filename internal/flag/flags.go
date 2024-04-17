@@ -94,6 +94,6 @@ var (
 	EOConfigFlag = &cli.StringFlag{
 		Name:    "eoconfig",
 		Usage:   "eoconfig contract address",
-		EnvVars: []string{"EO_EOCONFIG"},
+		EnvVars: []string{"EO_CONFIG"},
 	}
 )
