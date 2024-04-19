@@ -28,3 +28,4 @@ go.work
 
 # Docker configuration
 .docker
+.idea

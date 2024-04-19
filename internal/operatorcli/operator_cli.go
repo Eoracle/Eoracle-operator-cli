@@ -63,8 +63,8 @@ func RunEncrypt(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
 	}
 
-	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPair, passphrase); err != nil {
-		return cli.Exit(fmt.Sprintf("Error writing the ecdsaEncryptedWallet.json file %v", err), 1)
+	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, flag.EncryptedOperatorECDSAFile), ecdsaPair, passphrase); err != nil {
+		return cli.Exit(fmt.Sprintf("Error writing the %s file %v", flag.EncryptedOperatorECDSAFile, err), 1)
 	}
 	fmt.Println("ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "saved")
 
@@ -74,8 +74,8 @@ func RunEncrypt(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Invalid BLS private key %v", err), 1)
 	}
 
-	if err = blsKeyPair.SaveToFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase); err != nil {
-		return cli.Exit(fmt.Sprintf("Error writing the blsEncryptedWallet.json file %v", err), 1)
+	if err = blsKeyPair.SaveToFile(filepath.Join(keyStorePath, flag.EncryptedBLSFile), passphrase); err != nil {
+		return cli.Exit(fmt.Sprintf("Error writing the %s file %v", flag.EncryptedBLSFile, err), 1)
 	}
 	fmt.Println("bls address G1, G2 ", blsKeyPair.GetPubKeyG1().String(), ", ", blsKeyPair.GetPubKeyG2().String(), "saved")
 
@@ -93,25 +93,25 @@ func RunDecrypt(c *cli.Context) error {
 		return cli.Exit("keystore-path is required", 1)
 	}
 
-	ecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+	ecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, flag.EncryptedOperatorECDSAFile), passphrase)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error reading the ecdsaEncryptedWallet.json file %v", err), 1)
+		return cli.Exit(fmt.Sprintf("Error reading the %s file %v", flag.EncryptedOperatorECDSAFile, err), 1)
 	}
 	fmt.Println("ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "private key", hex.EncodeToString(ecdsaPair.D.Bytes()))
 
-	blsKeyPair, err := eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase)
+	blsKeyPair, err := eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, flag.EncryptedBLSFile), passphrase)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error reading the blsEncryptedWallet.json file %v", err), 1)
+		return cli.Exit(fmt.Sprintf("Error reading the %s file %v", flag.EncryptedBLSFile, err), 1)
 	}
 	fmt.Println("bls address G1, G2 ", blsKeyPair.GetPubKeyG1().String(), ", ", blsKeyPair.GetPubKeyG2().String(), "private key", blsKeyPair.PrivKey.String())
 
-	ecdsaEOChainPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	ecdsaEOChainPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, flag.EncryptedAliasKeystoreFile), passphrase)
 	if err != nil {
 		if err == os.ErrNotExist {
 			fmt.Println("EOChain alias was not set in the system")
 			return nil
 		}
-		return cli.Exit(fmt.Sprintf("Error reading the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
+		return cli.Exit(fmt.Sprintf("Error reading the %s file %v", flag.EncryptedAliasKeystoreFile, err), 1)
 	}
 	fmt.Println("EOChain ecdsa address ", crypto.PubkeyToAddress(ecdsaEOChainPair.PublicKey), "private key", hex.EncodeToString(ecdsaEOChainPair.D.Bytes()))
 
@@ -144,13 +144,13 @@ func RunRegister(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Invalid BLS private key %v", err), 1)
 		}
 	} else {
-		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, flag.EncryptedOperatorECDSAFile), passphrase)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
+			return cli.Exit(fmt.Sprintf("Failed to read %s file %v", flag.EncryptedOperatorECDSAFile, err), 1)
 		}
-		blsKeyPair, err = eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase)
+		blsKeyPair, err = eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, flag.EncryptedBLSFile), passphrase)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to read blsEncryptedWallet.json file %v", err), 1)
+			return cli.Exit(fmt.Sprintf("Failed to read %s file %v", flag.EncryptedBLSFile, err), 1)
 		}
 	}
 
@@ -307,9 +307,9 @@ func RunDeregister(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
 		}
 	} else {
-		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, flag.EncryptedOperatorECDSAFile), passphrase)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
+			return cli.Exit(fmt.Sprintf("Failed to read %s file %v", flag.EncryptedOperatorECDSAFile, err), 1)
 		}
 	}
 
@@ -395,9 +395,9 @@ func RunPrintStatus(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
 		}
 	} else {
-		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, flag.EncryptedOperatorECDSAFile), passphrase)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
+			return cli.Exit(fmt.Sprintf("Failed to read %s file %v", flag.EncryptedOperatorECDSAFile, err), 1)
 		}
 	}
 	operatorAddress := crypto.PubkeyToAddress(ecdsaPair.PublicKey)
@@ -478,30 +478,14 @@ func RunEOChainSetAlias(c *cli.Context) error {
 	if keyStorePath == "" {
 		return cli.Exit("keystore-path is required", 1)
 	}
-	EthecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
-	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
-	}
-	var ecdsaPair *ecdsa.PrivateKey
-	if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
-		// Use the private key passed in the command line
-		ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
-		if err != nil {
-			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
-		}
-	} else {
-		// Generate a new key and save it to a faile
-		ecdsaPair, err = crypto.GenerateKey()
-		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to generate ECDSA key %v", err), 1)
-		}
-	}
 
-	// Save the private key to a file
-	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), ecdsaPair, passphrase); err != nil {
-		return cli.Exit(fmt.Sprintf("Error writing the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
+	_mangeKey := NewMangeKey(keyStorePath, flag.EncryptedOperatorECDSAFile, passphrase,
+		c.String(flag.EcdsaPrivateKeyFlag.Name), flag.EncryptedAliasKeystoreFile, passphrase)
+
+	keys, err := _mangeKey.getPrivateKeys()
+	if err != nil {
+		return cli.Exit(err, 1)
 	}
-	fmt.Println("alias ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "saved")
 
 	if !c.Bool(flag.EncryptOnlyFlag.Name) {
 		// Update the alias in the eochain
@@ -529,9 +513,9 @@ func RunEOChainSetAlias(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Failed to bind the eoconfig contract %v", err), 1)
 		}
 
-		signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: EthecdsaPair}, chainIDBigInt)
+		signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: keys.operatorECDSA}, chainIDBigInt)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("error creating the signer function for %v %v", crypto.PubkeyToAddress(EthecdsaPair.PublicKey), err), 1)
+			return cli.Exit(fmt.Sprintf("error creating the signer function for %v %v", crypto.PubkeyToAddress(keys.operatorECDSA.PublicKey), err), 1)
 		}
 
 		txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
@@ -547,7 +531,7 @@ func RunEOChainSetAlias(c *cli.Context) error {
 
 		tx, err := contractEOConfig.DeclareAlias(
 			noSendTxOpts,
-			crypto.PubkeyToAddress(ecdsaPair.PublicKey),
+			crypto.PubkeyToAddress(keys.aliasECDSA.PublicKey),
 		)
 		if err != nil {
 			return cli.Exit(fmt.Sprintf("Failed to create EOConfig.SetAlias transaction %v", err), 1)
@@ -562,8 +546,7 @@ func RunEOChainSetAlias(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("setAlias transaction %v reverted", receipt.TxHash.Hex()), 1)
 		}
 
-		logger.Info("succesfully set the alias in the eochain", "Ethereum address", signerAddr, "eochain address", crypto.PubkeyToAddress(EthecdsaPair.PublicKey), "tx hash", receipt.TxHash.Hex())
-
+		logger.Info("successfully set the alias in the eochain", "Ethereum address", signerAddr, "eochain address", crypto.PubkeyToAddress(keys.operatorECDSA.PublicKey), "tx hash", receipt.TxHash.Hex())
 	}
 	return nil
 }

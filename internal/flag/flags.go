@@ -5,7 +5,9 @@ import (
 )
 
 const (
-	EncyrptedEDCSAFile = "encryptedWallet.json"
+	EncryptedOperatorECDSAFile = "ecdsaEncryptedWallet.json"
+	EncryptedAliasKeystoreFile = "ecdsaAliasedEncryptedWallet.json"
+	EncryptedBLSFile           = "blsEncryptedWallet.json"
 )
 
 var (
