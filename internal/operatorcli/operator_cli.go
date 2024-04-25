@@ -480,7 +480,7 @@ func RunEOChainSetAlias(c *cli.Context) error {
 	}
 
 	_mangeKey := NewMangeKey(keyStorePath, flag.EncryptedOperatorECDSAFile, passphrase,
-		c.String(flag.EcdsaPrivateKeyFlag.Name), flag.EncryptedAliasKeystoreFile, passphrase)
+		c.String(flag.EcdsaPrivateKeyFlag.Name), flag.EncryptedAliasKeystoreFile, flag.EncryptedBLSFile)
 
 	keys, err := _mangeKey.getPrivateKeys()
 	if err != nil {

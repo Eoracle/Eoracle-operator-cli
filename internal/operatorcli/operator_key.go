@@ -3,79 +3,88 @@ package operatorcli
 import (
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/Eoracle/core-go/internal/flag"
+	"github.com/Layr-Labs/eigensdk-go/crypto/bls"
+	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/urfave/cli/v2"
 	"path/filepath"
 )
 
-type mangeKey struct {
-	keyStorePath           string
-	operatorKeystore       string
-	operatorECDSPassphrase string
-	aliasECDSA             string
-	aliasKeystore          string
-	aliasECDSAPassphrase   string
+type manageKey struct {
+	keyStorePath     string
+	operatorKeystore string
+	passphrase       string
+	aliasECDSA       string
+	aliasKeystore    string
+	blsEncryptedFile string
 }
 
-type priKeys struct {
-	operatorECDSA *ecdsa.PrivateKey
-	aliasECDSA    *ecdsa.PrivateKey
+type privateKeys struct {
+	operatorECDSA    *ecdsa.PrivateKey
+	aliasECDSA       *ecdsa.PrivateKey
+	blsEncryptedFile *bls.KeyPair
 }
 
 func NewMangeKey(
 	keyStorePath string,
 	operatorECDSAFile string,
-	operatorECDSPassphrase string,
+	passphrase string,
 	aliasECDSA string,
 	aliasECDSAFile string,
-	aliasECDSAPassphrase string,
-) *mangeKey {
-	return &mangeKey{
-		keyStorePath:           keyStorePath,
-		operatorKeystore:       operatorECDSAFile,
-		operatorECDSPassphrase: operatorECDSPassphrase,
-		aliasECDSA:             aliasECDSA,
-		aliasKeystore:          aliasECDSAFile,
-		aliasECDSAPassphrase:   aliasECDSAPassphrase,
+	blsEncryptedFile string,
+) *manageKey {
+	return &manageKey{
+		keyStorePath:     keyStorePath,
+		operatorKeystore: operatorECDSAFile,
+		passphrase:       passphrase,
+		aliasECDSA:       aliasECDSA,
+		aliasKeystore:    aliasECDSAFile,
+		blsEncryptedFile: blsEncryptedFile,
 	}
 }
 
-func (m *mangeKey) getPrivateKeys() (priKeys, error) {
-	operatorPK, err := m.getOperatorPrivateKey()
+func (m *manageKey) getPrivateKeys() (privateKeys, error) {
+	operatorPrivateKey, err := m.getOperatorPrivateKey()
 	if err != nil {
-		return priKeys{}, err
+		return privateKeys{}, fmt.Errorf("failed read private Key for the operator, erorr: %s", err)
 	}
 
-	aliasPK, err := m.getAliasPrivateKey()
+	aliasPrivateKey, err := m.getAliasPrivateKey()
 	if err != nil {
-		return priKeys{}, err
+		return privateKeys{}, fmt.Errorf("failed read private key for the alias, error: %s", err)
 	}
 
-	return priKeys{
-		operatorECDSA: operatorPK,
-		aliasECDSA:    aliasPK,
+	blsPrivateKey, err := m.blsPrivateKey()
+	if err != nil {
+		return privateKeys{}, fmt.Errorf("failed read bls private error: %s", err)
+	}
+
+	return privateKeys{
+		operatorECDSA:    operatorPrivateKey,
+		aliasECDSA:       aliasPrivateKey,
+		blsEncryptedFile: blsPrivateKey,
 	}, nil
 }
 
-func (m *mangeKey) getOperatorPrivateKey() (*ecdsa.PrivateKey, error) {
+func (m *manageKey) getOperatorPrivateKey() (*ecdsa.PrivateKey, error) {
 	fmt.Println("keyPath:", m.keyStorePath)
 
 	operatorECDSAPair, err := eigensdkecdsa.ReadKey(filepath.Join(m.keyStorePath, m.operatorKeystore),
-		m.operatorECDSPassphrase)
+		m.passphrase)
 	if err != nil {
-		return nil, cli.Exit(fmt.Sprintf("Failed to read %s file %v", m.operatorKeystore, err), 1)
+		return nil, fmt.Errorf("failed to read %s file %v", m.operatorKeystore, err)
 	}
 	return operatorECDSAPair, nil
 }
 
-func (m *mangeKey) getAliasPrivateKey() (*ecdsa.PrivateKey, error) {
-	aliasPrivateKey, err := eigensdkecdsa.ReadKey(filepath.Join(m.keyStorePath, m.aliasKeystore), m.aliasECDSAPassphrase)
+func (m *manageKey) getAliasPrivateKey() (*ecdsa.PrivateKey, error) {
+	aliasPrivateKey, err := eigensdkecdsa.ReadKey(filepath.Join(m.keyStorePath, m.aliasKeystore), m.passphrase)
 	if err != nil {
 		var ecdsaPair *ecdsa.PrivateKey
 		// generate
 		if m.aliasECDSA != "" {
-			if m.aliasECDSA[:2] == "0x" || m.aliasECDSA[:2] == "0X" {
+			if len(m.aliasECDSA) >= 64 && (m.aliasECDSA[:2] == "0x" || m.aliasECDSA[:2] == "0X") {
 				m.aliasECDSA = m.aliasECDSA[2:]
 			}
 			ecdsaPair, err = crypto.HexToECDSA(m.aliasECDSA)
@@ -87,7 +96,7 @@ func (m *mangeKey) getAliasPrivateKey() (*ecdsa.PrivateKey, error) {
 			return nil, err
 		}
 
-		err = eigensdkecdsa.WriteKey(filepath.Join(m.keyStorePath, m.aliasKeystore), ecdsaPair, m.aliasECDSAPassphrase)
+		err = eigensdkecdsa.WriteKey(filepath.Join(m.keyStorePath, m.aliasKeystore), ecdsaPair, m.passphrase)
 		if err != nil {
 			return nil, fmt.Errorf("error writing the %s file %v", m.aliasKeystore, err)
 		}
@@ -97,4 +106,16 @@ func (m *mangeKey) getAliasPrivateKey() (*ecdsa.PrivateKey, error) {
 	}
 	fmt.Println("alias Private Key already exists")
 	return aliasPrivateKey, nil
+}
+
+func (m *manageKey) blsPrivateKey() (*bls.KeyPair, error) {
+	fmt.Println("bls private key path:", m.keyStorePath)
+
+	blsKeyPair, err := eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(m.keyStorePath, m.blsEncryptedFile), m.passphrase)
+	if err != nil {
+		return nil, fmt.Errorf("error reading the %s file %v", flag.EncryptedBLSFile, err)
+	}
+	fmt.Println("bls address G1, G2 ", blsKeyPair.GetPubKeyG1().String(), ", ", blsKeyPair.GetPubKeyG2().String(),
+		"private key", blsKeyPair.PrivKey.String())
+	return blsKeyPair, nil
 }
