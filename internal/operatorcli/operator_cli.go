@@ -486,14 +486,14 @@ func RunEOChainSetAlias(c *cli.Context) error {
 
 	// The following summarizes the logic of setting the alias in the eochain
 	// An alias exists 	| specified as argument | override flag | expected behavior 
-	//    yes 			|   no  				|   no  		|   use the existing value
-	//    yes 			|   no  				|   yes 		|   use the existing value
-	//    yes 			|   yes 				|   no  		|   return an error
-	//    yes 			|   yes 				|   yes 		|   use the value from the cli
-	//    no  			|   no  				|   no  		|   generate a new value
-	//    no  			|   no  				|   yes 		|   generate a new value
-	//    no  			|   yes 				|   no  		|   use the value from the cli
-	//    no  			|   yes 				|   yes 		|   use the value from the cli 
+	//    yes           |   no                  |   no          |   use the existing value
+	//    yes           |   no                  |   yes         |   use the existing value
+	//    yes           |   yes                 |   no          |   return an error
+	//    yes           |   yes                 |   yes         |   use the value from the cli
+	//    no            |   no                  |   no          |   generate a new value
+	//    no            |   no                  |   yes         |   generate a new value
+	//    no            |   yes                 |   no          |   use the value from the cli
+	//    no            |   yes                 |   yes         |   use the value from the cli 
 
 	aliasEcdsaKeyUpdated := false
 	var ecdsaPair *ecdsa.PrivateKey
