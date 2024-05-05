@@ -484,16 +484,16 @@ func RunEOChainSetAlias(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
 	}
 
-	// The following summarizes the logic for setting the alias in the eochain
-	// An alias exists | specified as argument | override flag 	| expected behavior 
-	//   yes           |   no        		   |    no     		|    use existing
-	//   yes		   |   no        		   |    yes    		|    use existing
-	//   yes           |   yes       		   |    no     		|    error
-	//   yes           |   yes       		   |    yes    		|    use the cli
-	//   no            |   no        		   |    no     		|    generate new
-	//   no            |   no        		   |    yes    		|    generate new
-	//   no            |   yes       		   |    no     		|    use the cli
-	//   no            |   yes       		   |    yes    		|    use the cli 
+	// The following summarizes the logic of setting the alias in the eochain
+	// An alias exists 	| specified as argument | override flag | expected behavior 
+	//    yes 			|   no  				|   no  		|   use the existing value
+	//    yes 			|   no  				|   yes 		|   use the existing value
+	//    yes 			|   yes 				|   no  		|   return an error
+	//    yes 			|   yes 				|   yes 		|   use the value from the cli
+	//    no  			|   no  				|   no  		|   generate a new value
+	//    no  			|   no  				|   yes 		|   generate a new value
+	//    no  			|   yes 				|   no  		|   use the value from the cli
+	//    no  			|   yes 				|   yes 		|   use the value from the cli 
 
 	aliasEcdsaKeyUpdated := false
 	var ecdsaPair *ecdsa.PrivateKey
