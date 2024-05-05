@@ -598,7 +598,6 @@ func RunEOChainSetAlias(c *cli.Context) error {
 		}
 
 		logger.Info("succesfully declare the alias in the eochain", "Ethereum address", signerAddr, "eochain address", crypto.PubkeyToAddress(EthEcdsaPair.PublicKey), "tx hash", receipt.TxHash.Hex())
-
 	}
 	return nil
 }
