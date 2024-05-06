@@ -84,17 +84,26 @@ var commandGenerateBLSKey = &cli.Command{
 	Flags:       []cli.Flag{},
 }
 
-var commandEOChainSetAlias = &cli.Command{
-	Name:        "eochain-set-alias",
-	Description: "Create or Import a ECDSA private key only for oracle chain. The command can also update the eochain with the alias",
-	Action:      runEOChainSetAlias,
+var commandGenerateAlias = &cli.Command{
+	Name:        "generate-alias",
+	Description: "Create or Import an ECDSA private key only for oracle chain",
+	Action:      runGenerateAlias,
 	Flags:       []cli.Flag{
 		flag.EcdsaPrivateKeyFlag,
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
-		flag.EOChainEthRPCFlag,
-		flag.EncryptOnlyFlag,
 		flag.OverrideFlag,
+	},
+}
+
+var commandDeclareAlias = &cli.Command{
+	Name:        "declare-alias",
+	Description: "Declare the alias in the eochain",
+	Action:      runDeclareAlias,
+	Flags:       []cli.Flag{
+		flag.PassphraseFlag,
+		flag.KeyStorePathFlag,
+		flag.EOChainEthRPCFlag,
 		flag.EOConfigAddressFlag,
 	},
 }
@@ -111,7 +120,8 @@ func main() {
 		commandDeregister,
 		commandPrintStatus,
 		commandGenerateBLSKey,
-		commandEOChainSetAlias,
+		commandGenerateAlias,
+		commandDeclareAlias,
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -144,6 +154,10 @@ func runGenerateBLSKey(c *cli.Context) error {
 	return operatorcli.RunGenerateBLSKey(c)
 }
 
-func runEOChainSetAlias(c *cli.Context) error {
-	return operatorcli.RunEOChainSetAlias(c)
+func runGenerateAlias(c *cli.Context) error {
+	return operatorcli.RunGenerateAlias(c)
+}
+
+func runDeclareAlias(c *cli.Context) error {
+	return operatorcli.RunDeclareAlias(c)
 }
