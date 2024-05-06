@@ -94,7 +94,8 @@ var commandEOChainSetAlias = &cli.Command{
 		flag.KeyStorePathFlag,
 		flag.EOChainEthRPCFlag,
 		flag.EncryptOnlyFlag,
-		flag.EOConfigFlag,
+		flag.OverrideFlag,
+		flag.EOConfigAddressFlag,
 	},
 }
 

@@ -91,9 +91,16 @@ var (
 		DefaultText: "False",
 		Value:       false,
 	}
-	EOConfigFlag = &cli.StringFlag{
-		Name:    "eoconfig",
+	OverrideFlag = &cli.BoolFlag{
+		Name:        "override",
+		Usage:       "Indication if a new alias key should be created",
+		EnvVars:     []string{"EO_OVERRIDE"},
+		DefaultText: "False",
+		Value:       false,
+	}
+	EOConfigAddressFlag = &cli.StringFlag{
+		Name:    "eoconfig-address",
 		Usage:   "eoconfig contract address",
-		EnvVars: []string{"EO_CONFIG"},
+		EnvVars: []string{"EO_CONFIG_ADDRESS"},
 	}
 )

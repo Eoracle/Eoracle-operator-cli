@@ -108,12 +108,12 @@ func RunDecrypt(c *cli.Context) error {
 	ecdsaEOChainPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
 	if err != nil {
 		if err == os.ErrNotExist {
-			fmt.Println("EOChain alias was not set in the system")
+			fmt.Println("eochain alias was not set in the system")
 			return nil
 		}
 		return cli.Exit(fmt.Sprintf("Error reading the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
 	}
-	fmt.Println("EOChain ecdsa address ", crypto.PubkeyToAddress(ecdsaEOChainPair.PublicKey), "private key", hex.EncodeToString(ecdsaEOChainPair.D.Bytes()))
+	fmt.Println("eochain ecdsa address ", crypto.PubkeyToAddress(ecdsaEOChainPair.PublicKey), "private key", hex.EncodeToString(ecdsaEOChainPair.D.Bytes()))
 
 	return nil
 }
@@ -478,22 +478,55 @@ func RunEOChainSetAlias(c *cli.Context) error {
 	if keyStorePath == "" {
 		return cli.Exit("keystore-path is required", 1)
 	}
-	EthecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+
+	EthEcdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
 	}
+
+	// The following summarizes the logic of setting the alias in the eochain
+	// An alias exists 	| specified as argument | override flag | expected behavior 
+	//    yes           |   no                  |   no          |   use the existing value
+	//    yes           |   no                  |   yes         |   use the existing value
+	//    yes           |   yes                 |   no          |   return an error
+	//    yes           |   yes                 |   yes         |   use the value from the cli
+	//    no            |   no                  |   no          |   generate a new value
+	//    no            |   no                  |   yes         |   generate a new value
+	//    no            |   yes                 |   no          |   use the value from the cli
+	//    no            |   yes                 |   yes         |   use the value from the cli 
+
+	aliasEcdsaKeyUpdated := false
 	var ecdsaPair *ecdsa.PrivateKey
-	if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
-		// Use the private key passed in the command line
-		ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
-		if err != nil {
-			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
+	ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	if err != nil {
+		// there was an error reading the alias key (either the file doesn't exist or it is corrupted), consider as if the alias doesn't exist
+		if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
+			// Use the private key passed in the command line
+			ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
+			if err != nil {
+				return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
+			}
+			aliasEcdsaKeyUpdated = true
+		} else {
+			// Generate a new key
+			ecdsaPair, err = crypto.GenerateKey()
+			if err != nil {
+				return cli.Exit(fmt.Sprintf("Failed to generate ECDSA key %v", err), 1)
+			}
+			aliasEcdsaKeyUpdated = true
+			fmt.Println("a new alias ecdsa was generated address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "private key", hex.EncodeToString(ecdsaPair.D.Bytes()))
 		}
 	} else {
-		// Generate a new key and save it to a faile
-		ecdsaPair, err = crypto.GenerateKey()
-		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to generate ECDSA key %v", err), 1)
+		if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
+			if !c.Bool(flag.OverrideFlag.Name) {
+				return cli.Exit("The alias key already exists, cannot override", 1)
+			} 
+			// Use the private key passed in the command line
+			ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
+			if err != nil {
+				return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
+			}
+			aliasEcdsaKeyUpdated = true
 		}
 	}
 
@@ -501,7 +534,9 @@ func RunEOChainSetAlias(c *cli.Context) error {
 	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), ecdsaPair, passphrase); err != nil {
 		return cli.Exit(fmt.Sprintf("Error writing the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
 	}
-	fmt.Println("alias ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "saved")
+	if aliasEcdsaKeyUpdated {
+		fmt.Println("alias ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "saved")
+	}
 
 	if !c.Bool(flag.EncryptOnlyFlag.Name) {
 		// Update the alias in the eochain
@@ -509,10 +544,10 @@ func RunEOChainSetAlias(c *cli.Context) error {
 			return cli.Exit("eochain-eth-rpc is required", 1)
 		}
 
-		if c.String(flag.EOConfigFlag.Name) == "" {
+		if c.String(flag.EOConfigAddressFlag.Name) == "" {
 			return cli.Exit("eoconfig is required", 1)
 		}
-		eoConfigAddr := gethcommon.HexToAddress(c.String(flag.EOConfigFlag.Name))
+		eoConfigAddr := gethcommon.HexToAddress(c.String(flag.EOConfigAddressFlag.Name))
 
 		ethClient, err := eth.NewClient(c.String(flag.EOChainEthRPCFlag.Name))
 		if err != nil {
@@ -529,9 +564,9 @@ func RunEOChainSetAlias(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Failed to bind the eoconfig contract %v", err), 1)
 		}
 
-		signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: EthecdsaPair}, chainIDBigInt)
+		signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: EthEcdsaPair}, chainIDBigInt)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("error creating the signer function for %v %v", crypto.PubkeyToAddress(EthecdsaPair.PublicKey), err), 1)
+			return cli.Exit(fmt.Sprintf("error creating the signer function for %v %v", crypto.PubkeyToAddress(EthEcdsaPair.PublicKey), err), 1)
 		}
 
 		txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
@@ -550,20 +585,19 @@ func RunEOChainSetAlias(c *cli.Context) error {
 			crypto.PubkeyToAddress(ecdsaPair.PublicKey),
 		)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("Failed to create EOConfig.SetAlias transaction %v", err), 1)
+			return cli.Exit(fmt.Sprintf("Failed to create EOConfig.declareAlias transaction %v", err), 1)
 		}
 
 		ctx := context.Background()
 		receipt, err := txMgr.Send(ctx, tx)
 		if err != nil {
-			return cli.Exit(fmt.Sprintf("setAlias transaction failed %s", err), 1)
+			return cli.Exit(fmt.Sprintf("declareAlias transaction failed %s", err), 1)
 		}
 		if receipt.Status != 1 {
-			return cli.Exit(fmt.Sprintf("setAlias transaction %v reverted", receipt.TxHash.Hex()), 1)
+			return cli.Exit(fmt.Sprintf("declareAlias transaction %v reverted", receipt.TxHash.Hex()), 1)
 		}
 
-		logger.Info("succesfully set the alias in the eochain", "Ethereum address", signerAddr, "eochain address", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "tx hash", receipt.TxHash.Hex())
-
+		logger.Info("succesfully declared an alias in the eochain", "Ethereum address", crypto.PubkeyToAddress(EthEcdsaPair.PublicKey), "eochain address", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "tx hash", receipt.TxHash.Hex())
 	}
 	return nil
 }
