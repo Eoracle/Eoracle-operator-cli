@@ -17,9 +17,9 @@ var (
 		Value:       ".keystore",
 	}
 	EthRPCFlag = &cli.StringFlag{
-		Name:    "eth-rpc",
+		Name:    "eth-rpc-endpoint",
 		Usage:   "ethereum rpc url",
-		EnvVars: []string{"EO_ETH_RPC"},
+		EnvVars: []string{"ETH_RPC_ENDPOINT"},
 	}
 	RegistryCoordinatorFlag = &cli.StringFlag{
 		Name:    "registry-coordinator",
@@ -80,8 +80,8 @@ var (
 		Value:       0,
 	}
 	EOChainEthRPCFlag = &cli.StringFlag{
-		Name:    "eochaineth-rpc",
-		Usage:   "eochain ethereum rpc url",
+		Name:    "eochain-rpc-endpoint",
+		Usage:   "eochain rpc url",
 		EnvVars: []string{"EO_CHAIN_RPC_ENDPOINT"},
 	}
 	EncryptOnlyFlag = &cli.BoolFlag{
@@ -92,9 +92,9 @@ var (
 		Value:       false,
 	}
 	OverrideFlag = &cli.BoolFlag{
-		Name:        "override",
+		Name:        "alias-override",
 		Usage:       "Indication if a new alias key should be created",
-		EnvVars:     []string{"EO_OVERRIDE"},
+		EnvVars:     []string{"EO_ALIAS_OVERRIDE"},
 		DefaultText: "False",
 		Value:       false,
 	}
