@@ -47,14 +47,17 @@ type avsClient struct {
 }
 
 func RunEncrypt(c *cli.Context) error {
+	passphrase := c.String(flag.PassphraseFlag.Name)
 	blsPassphrase := c.String(flag.BlsPassphraseFlag.Name)
-	if blsPassphrase == "" {
-		return cli.Exit("BLS passphrase is required", 1)
-	}
-
 	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
-	if ecdsaPassphrase == "" {
-		return cli.Exit("ECDSA passphrase is required", 1)
+
+	if passphrase == "" {
+		if blsPassphrase == "" || ecdsaPassphrase == "" {
+			return cli.Exit("either passphrase or bls/ecdsa passphrase is required", 1)
+		}
+	} else {
+		blsPassphrase = passphrase
+		ecdsaPassphrase = passphrase
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -88,19 +91,19 @@ func RunEncrypt(c *cli.Context) error {
 }
 
 func RunDecrypt(c *cli.Context) error {
+	passphrase := c.String(flag.PassphraseFlag.Name)
 	blsPassphrase := c.String(flag.BlsPassphraseFlag.Name)
-	if blsPassphrase == "" {
-		return cli.Exit("BLS passphrase is required", 1)
-	}
-
 	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
-	if ecdsaPassphrase == "" {
-		return cli.Exit("ECDSA passphrase is required", 1)
-	}
-
 	ecdsaAliasedPassphrase := c.String(flag.EcdsaAliasedPassphraseFlag.Name)
-	if ecdsaAliasedPassphrase == "" {
-		return cli.Exit("ECDSA aliased passphrase is required", 1)
+
+	if passphrase == "" {
+		if blsPassphrase == "" || ecdsaPassphrase == "" || ecdsaAliasedPassphrase == "" {
+			return cli.Exit("either passphrase or bls/ecdsa/aliased ecdsa passphrase is required", 1)
+		}
+	} else {
+		blsPassphrase = passphrase
+		ecdsaPassphrase = passphrase
+		ecdsaAliasedPassphrase = passphrase
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -134,8 +137,9 @@ func RunDecrypt(c *cli.Context) error {
 }
 
 func RunRegister(c *cli.Context) error {
-	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
+	passphrase := c.String(flag.PassphraseFlag.Name)
 	blsPassphrase := c.String(flag.BlsPassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaPair *ecdsa.PrivateKey
@@ -147,7 +151,12 @@ func RunRegister(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
 
-	if ecdsaPassphrase == "" || blsPassphrase == "" || keyStorePath == "" {
+	if passphrase != "" {
+		blsPassphrase = passphrase
+		ecdsaPassphrase = passphrase
+	}
+
+	if blsPassphrase == "" || ecdsaPassphrase == "" || keyStorePath == "" {
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) == "" || c.String(flag.BlsPrivateKeyFlag.Name) == "" {
 			return cli.Exit("either ecdsa/bls passphrase and keystore-path or ecdsa-private-key and bls-private-key are required", 1)
 		}
@@ -549,14 +558,17 @@ func RunDeclareAlias(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Error creating logger %v", err), 1)
 	}
 
+	passphrase := c.String(flag.PassphraseFlag.Name)
 	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
-	if ecdsaPassphrase == "" {
-		return cli.Exit("ECDSA passphrase is required", 1)
-	}
-
 	ecdsaAliasedPassphrase := c.String(flag.EcdsaAliasedPassphraseFlag.Name)
-	if ecdsaAliasedPassphrase == "" {
-		return cli.Exit("ECDSA aliased passphrase is required", 1)
+
+	if passphrase == "" {
+		if ecdsaPassphrase == "" || ecdsaAliasedPassphrase == "" {
+			return cli.Exit("either passphrase or ecdsa/aliased ecdsa passphrase is required", 1)
+		}
+	} else {
+		ecdsaPassphrase = passphrase
+		ecdsaAliasedPassphrase = passphrase
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)

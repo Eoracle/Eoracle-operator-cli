@@ -16,6 +16,7 @@ var commandEncrypt = &cli.Command{
 	Flags: []cli.Flag{
 		flag.EcdsaPrivateKeyFlag,
 		flag.BlsPrivateKeyFlag,
+		flag.PassphraseFlag,
 		flag.BlsPassphraseFlag,
 		flag.EcdsaPassphraseFlag,
 		flag.EcdsaAliasedPassphraseFlag,
@@ -27,6 +28,7 @@ var commandDecrypt = &cli.Command{
 	Description: "Decrypt the ecdsa and bls private keys",
 	Action:      runDecrypt,
 	Flags: []cli.Flag{
+		flag.PassphraseFlag,
 		flag.BlsPassphraseFlag,
 		flag.EcdsaPassphraseFlag,
 		flag.EcdsaAliasedPassphraseFlag,
@@ -41,6 +43,7 @@ var commandRegister = &cli.Command{
 	Flags: []cli.Flag{
 		flag.EthRPCFlag,
 		flag.RegistryCoordinatorFlag,
+		flag.PassphraseFlag,
 		flag.BlsPassphraseFlag,
 		flag.EcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
@@ -106,6 +109,7 @@ var commandDeclareAlias = &cli.Command{
 	Description: "Declare the alias in the eochain",
 	Action:      runDeclareAlias,
 	Flags:       []cli.Flag{
+		flag.PassphraseFlag,
 		flag.EcdsaPassphraseFlag,
 		flag.EcdsaAliasedPassphraseFlag,
 		flag.KeyStorePathFlag,
