@@ -17,6 +17,8 @@ var commandEncrypt = &cli.Command{
 		flag.EcdsaPrivateKeyFlag,
 		flag.BlsPrivateKeyFlag,
 		flag.PassphraseFlag,
+		flag.BlsPassphraseFlag,
+		flag.EcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 	},
 }
@@ -26,6 +28,9 @@ var commandDecrypt = &cli.Command{
 	Action:      runDecrypt,
 	Flags: []cli.Flag{
 		flag.PassphraseFlag,
+		flag.BlsPassphraseFlag,
+		flag.EcdsaPassphraseFlag,
+		flag.AliasedEcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 	},
 }
@@ -38,6 +43,8 @@ var commandRegister = &cli.Command{
 		flag.EthRPCFlag,
 		flag.RegistryCoordinatorFlag,
 		flag.PassphraseFlag,
+		flag.BlsPassphraseFlag,
+		flag.EcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.SaltFlag,
 		flag.ExpiryFlag,
@@ -56,7 +63,7 @@ var commandDeregister = &cli.Command{
 	Flags: []cli.Flag{
 		flag.EthRPCFlag,
 		flag.RegistryCoordinatorFlag,
-		flag.PassphraseFlag,
+		flag.EcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.EcdsaPrivateKeyFlag,
 		flag.QuorumNumberFlag,
@@ -70,7 +77,7 @@ var commandPrintStatus = &cli.Command{
 	Flags: []cli.Flag{
 		flag.EthRPCFlag,
 		flag.RegistryCoordinatorFlag,
-		flag.PassphraseFlag,
+		flag.EcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.EcdsaPrivateKeyFlag,
 		flag.QuorumNumberFlag,
@@ -89,8 +96,8 @@ var commandGenerateAlias = &cli.Command{
 	Description: "Create or Import an ECDSA private key only for oracle chain",
 	Action:      runGenerateAlias,
 	Flags:       []cli.Flag{
-		flag.EcdsaPrivateKeyFlag,
-		flag.PassphraseFlag,
+		flag.AliasedEcdsaPrivateKeyFlag,
+		flag.AliasedEcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.OverrideFlag,
 	},
@@ -102,6 +109,8 @@ var commandDeclareAlias = &cli.Command{
 	Action:      runDeclareAlias,
 	Flags:       []cli.Flag{
 		flag.PassphraseFlag,
+		flag.EcdsaPassphraseFlag,
+		flag.AliasedEcdsaPassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.EOChainEthRPCFlag,
 		flag.EOConfigAddressFlag,

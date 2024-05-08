@@ -48,8 +48,16 @@ type avsClient struct {
 
 func RunEncrypt(c *cli.Context) error {
 	passphrase := c.String(flag.PassphraseFlag.Name)
+	blsPassphrase := c.String(flag.BlsPassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
+
 	if passphrase == "" {
-		return cli.Exit("passphrase is required", 1)
+		if blsPassphrase == "" || ecdsaPassphrase == "" {
+			return cli.Exit("either passphrase or bls/ecdsa passphrase is required", 1)
+		}
+	} else {
+		blsPassphrase = passphrase
+		ecdsaPassphrase = passphrase
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -63,7 +71,7 @@ func RunEncrypt(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
 	}
 
-	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPair, passphrase); err != nil {
+	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPair, ecdsaPassphrase); err != nil {
 		return cli.Exit(fmt.Sprintf("Error writing the ecdsaEncryptedWallet.json file %v", err), 1)
 	}
 	fmt.Println("ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "saved")
@@ -74,7 +82,7 @@ func RunEncrypt(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Invalid BLS private key %v", err), 1)
 	}
 
-	if err = blsKeyPair.SaveToFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase); err != nil {
+	if err = blsKeyPair.SaveToFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), blsPassphrase); err != nil {
 		return cli.Exit(fmt.Sprintf("Error writing the blsEncryptedWallet.json file %v", err), 1)
 	}
 	fmt.Println("bls address G1, G2 ", blsKeyPair.GetPubKeyG1().String(), ", ", blsKeyPair.GetPubKeyG2().String(), "saved")
@@ -84,8 +92,18 @@ func RunEncrypt(c *cli.Context) error {
 
 func RunDecrypt(c *cli.Context) error {
 	passphrase := c.String(flag.PassphraseFlag.Name)
+	blsPassphrase := c.String(flag.BlsPassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
+	aliasedEcdsaPassphrase := c.String(flag.AliasedEcdsaPassphraseFlag.Name)
+
 	if passphrase == "" {
-		return cli.Exit("passphrase is required", 1)
+		if blsPassphrase == "" || ecdsaPassphrase == "" || aliasedEcdsaPassphrase == "" {
+			return cli.Exit("either passphrase or bls/ecdsa/aliased ecdsa passphrase is required", 1)
+		}
+	} else {
+		blsPassphrase = passphrase
+		ecdsaPassphrase = passphrase
+		aliasedEcdsaPassphrase = passphrase
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -93,19 +111,19 @@ func RunDecrypt(c *cli.Context) error {
 		return cli.Exit("keystore-path is required", 1)
 	}
 
-	ecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+	ecdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPassphrase)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error reading the ecdsaEncryptedWallet.json file %v", err), 1)
 	}
 	fmt.Println("ecdsa address ", crypto.PubkeyToAddress(ecdsaPair.PublicKey), "private key", hex.EncodeToString(ecdsaPair.D.Bytes()))
 
-	blsKeyPair, err := eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase)
+	blsKeyPair, err := eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), blsPassphrase)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error reading the blsEncryptedWallet.json file %v", err), 1)
 	}
 	fmt.Println("bls address G1, G2 ", blsKeyPair.GetPubKeyG1().String(), ", ", blsKeyPair.GetPubKeyG2().String(), "private key", blsKeyPair.PrivKey.String())
 
-	ecdsaEOChainPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	ecdsaEOChainPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasedEcdsaPassphrase)
 	if err != nil {
 		if err == os.ErrNotExist {
 			fmt.Println("eochain alias was not set in the system")
@@ -120,6 +138,8 @@ func RunDecrypt(c *cli.Context) error {
 
 func RunRegister(c *cli.Context) error {
 	passphrase := c.String(flag.PassphraseFlag.Name)
+	blsPassphrase := c.String(flag.BlsPassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaPair *ecdsa.PrivateKey
@@ -131,9 +151,14 @@ func RunRegister(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
 
-	if passphrase == "" || keyStorePath == "" {
+	if passphrase != "" {
+		blsPassphrase = passphrase
+		ecdsaPassphrase = passphrase
+	}
+
+	if blsPassphrase == "" || ecdsaPassphrase == "" || keyStorePath == "" {
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) == "" || c.String(flag.BlsPrivateKeyFlag.Name) == "" {
-			return cli.Exit("either passphrase and keystore-path or ecdsa-private-key and bls-private-key are required", 1)
+			return cli.Exit("either general/ecdsa/bls passphrase and keystore-path or ecdsa-private-key and bls-private-key are required", 1)
 		}
 		ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
 		if err != nil {
@@ -144,11 +169,11 @@ func RunRegister(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Invalid BLS private key %v", err), 1)
 		}
 	} else {
-		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPassphrase)
 		if err != nil {
 			return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
 		}
-		blsKeyPair, err = eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), passphrase)
+		blsKeyPair, err = eigensdkbls.ReadPrivateKeyFromFile(filepath.Join(keyStorePath, "blsEncryptedWallet.json"), blsPassphrase)
 		if err != nil {
 			return cli.Exit(fmt.Sprintf("Failed to read blsEncryptedWallet.json file %v", err), 1)
 		}
@@ -287,7 +312,7 @@ func RunRegister(c *cli.Context) error {
 }
 
 func RunDeregister(c *cli.Context) error {
-	passphrase := c.String(flag.PassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaPair *ecdsa.PrivateKey
@@ -298,16 +323,16 @@ func RunDeregister(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
 
-	if passphrase == "" || keyStorePath == "" {
+	if ecdsaPassphrase == "" || keyStorePath == "" {
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) == "" {
-			return cli.Exit("either passphrase and keystore-path or ecdsa-private-key are required", 1)
+			return cli.Exit("either ecdsa/bls passphrase and keystore-path or ecdsa-private-key are required", 1)
 		}
 		ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
 		if err != nil {
 			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
 		}
 	} else {
-		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPassphrase)
 		if err != nil {
 			return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
 		}
@@ -375,7 +400,7 @@ func RunDeregister(c *cli.Context) error {
 }
 
 func RunPrintStatus(c *cli.Context) error {
-	passphrase := c.String(flag.PassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaPair *ecdsa.PrivateKey
@@ -386,7 +411,7 @@ func RunPrintStatus(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("error creating logger %v", err), 1)
 	}
 
-	if passphrase == "" || keyStorePath == "" {
+	if ecdsaPassphrase == "" || keyStorePath == "" {
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) == "" {
 			return cli.Exit("either passphrase and keystore-path or ecdsa-private-key are required", 1)
 		}
@@ -395,7 +420,7 @@ func RunPrintStatus(c *cli.Context) error {
 			return cli.Exit(fmt.Sprintf("Invalid EDCSA private key %v", err), 1)
 		}
 	} else {
-		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+		ecdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPassphrase)
 		if err != nil {
 			return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
 		}
@@ -464,9 +489,9 @@ func RunGenerateBLSKey(c *cli.Context) error {
 }
 
 func RunGenerateAlias(c *cli.Context) error {
-	passphrase := c.String(flag.PassphraseFlag.Name)
-	if passphrase == "" {
-		return cli.Exit("passphrase is required", 1)
+	aliasedEcdsaPassphrase := c.String(flag.AliasedEcdsaPassphraseFlag.Name)
+	if aliasedEcdsaPassphrase == "" {
+		return cli.Exit("aliased ecdsa passphrase is required", 1)
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -475,7 +500,7 @@ func RunGenerateAlias(c *cli.Context) error {
 	}
 
 	// The following summarizes the logic of setting the alias in the eochain
-	// An alias exists 	| specified as argument | override flag | expected behavior 
+	// An alias exists 	| specified as argument | override flag | expected behavior
 	//    yes           |   no                  |   no          |   use the existing value
 	//    yes           |   no                  |   yes         |   use the existing value
 	//    yes           |   yes                 |   no          |   return an error
@@ -483,11 +508,11 @@ func RunGenerateAlias(c *cli.Context) error {
 	//    no            |   no                  |   no          |   generate a new value
 	//    no            |   no                  |   yes         |   generate a new value
 	//    no            |   yes                 |   no          |   use the value from the cli
-	//    no            |   yes                 |   yes         |   use the value from the cli 
+	//    no            |   yes                 |   yes         |   use the value from the cli
 
 	var err error
 	var aliasEcdsaPair *ecdsa.PrivateKey
-	aliasEcdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	aliasEcdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasedEcdsaPassphrase)
 	if err != nil {
 		// there was an error reading the alias key (either the file doesn't exist or it is corrupted), consider as if the alias doesn't exist
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
@@ -508,7 +533,7 @@ func RunGenerateAlias(c *cli.Context) error {
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
 			if !c.Bool(flag.OverrideFlag.Name) {
 				return cli.Exit("The alias key already exists, cannot override", 1)
-			} 
+			}
 			// Use the private key passed in the command line
 			aliasEcdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
 			if err != nil {
@@ -518,10 +543,10 @@ func RunGenerateAlias(c *cli.Context) error {
 	}
 
 	// Save the private key to a file
-	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasEcdsaPair, passphrase); err != nil {
+	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasEcdsaPair, aliasedEcdsaPassphrase); err != nil {
 		return cli.Exit(fmt.Sprintf("Error writing the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
 	}
-	
+
 	fmt.Println("alias ecdsa address ", crypto.PubkeyToAddress(aliasEcdsaPair.PublicKey), "encrpyted and saved")
 
 	return nil
@@ -534,8 +559,16 @@ func RunDeclareAlias(c *cli.Context) error {
 	}
 
 	passphrase := c.String(flag.PassphraseFlag.Name)
+	ecdsaPassphrase := c.String(flag.EcdsaPassphraseFlag.Name)
+	aliasedEcdsaPassphrase := c.String(flag.AliasedEcdsaPassphraseFlag.Name)
+
 	if passphrase == "" {
-		return cli.Exit("passphrase is required", 1)
+		if ecdsaPassphrase == "" || aliasedEcdsaPassphrase == "" {
+			return cli.Exit("either passphrase or ecdsa/aliased ecdsa passphrase is required", 1)
+		}
+	} else {
+		ecdsaPassphrase = passphrase
+		aliasedEcdsaPassphrase = passphrase
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -543,12 +576,12 @@ func RunDeclareAlias(c *cli.Context) error {
 		return cli.Exit("keystore-path is required", 1)
 	}
 
-	ethEcdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), passphrase)
+	ethEcdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaEncryptedWallet.json"), ecdsaPassphrase)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Failed to read ecdsaEncryptedWallet.json file %v", err), 1)
 	}
 
-	aliasEcdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	aliasEcdsaPair, err := eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasedEcdsaPassphrase)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Failed to read ecdsaAliasedEncryptedWallet.json file %v", err), 1)
 	}
