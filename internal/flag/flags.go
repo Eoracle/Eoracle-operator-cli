@@ -60,6 +60,21 @@ var (
 		Usage:   "passphrase to open the encrypted private key",
 		EnvVars: []string{"EO_PASSPHRASE"},
 	}
+	BlsPassphraseFlag = &cli.StringFlag{
+		Name:    "bls-passphrase",
+		Usage:   "passphrase to open the encrypted BLS private key",
+		EnvVars: []string{"EO_BLS_PASSPHRASE"},
+	}
+	EcdsaPassphraseFlag = &cli.StringFlag{
+		Name:    "ecdsa-passphrase",
+		Usage:   "passphrase to open the encrypted ECDSA private key",
+		EnvVars: []string{"EO_ECDSA_PASSPHRASE"},
+	}
+	EcdsaAliasedPassphraseFlag = &cli.StringFlag{
+		Name:    "ecdsa-aliased-passphrase",
+		Usage:   "passphrase to open the encrypted aliased ECDSA private key",
+		EnvVars: []string{"EO_ALIASED_ECDSA_PASSPHRASE"},
+	}
 	ValidatorRoleFlag = &cli.StringFlag{
 		Name:        "validator-role",
 		Usage:       "role of the operator",
