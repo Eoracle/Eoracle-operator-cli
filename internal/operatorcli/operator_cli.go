@@ -158,7 +158,7 @@ func RunRegister(c *cli.Context) error {
 
 	if blsPassphrase == "" || ecdsaPassphrase == "" || keyStorePath == "" {
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) == "" || c.String(flag.BlsPrivateKeyFlag.Name) == "" {
-			return cli.Exit("either ecdsa/bls passphrase and keystore-path or ecdsa-private-key and bls-private-key are required", 1)
+			return cli.Exit("either general/ecdsa/bls passphrase and keystore-path or ecdsa-private-key and bls-private-key are required", 1)
 		}
 		ecdsaPair, err = crypto.HexToECDSA(c.String(flag.EcdsaPrivateKeyFlag.Name))
 		if err != nil {
@@ -489,9 +489,9 @@ func RunGenerateBLSKey(c *cli.Context) error {
 }
 
 func RunGenerateAlias(c *cli.Context) error {
-	passphrase := c.String(flag.PassphraseFlag.Name)
-	if passphrase == "" {
-		return cli.Exit("passphrase is required", 1)
+	ecdsaAliasedPassphrase := c.String(flag.EcdsaAliasedPassphraseFlag.Name)
+	if ecdsaAliasedPassphrase == "" {
+		return cli.Exit("aliased ecdsa passphrase is required", 1)
 	}
 
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
@@ -512,7 +512,7 @@ func RunGenerateAlias(c *cli.Context) error {
 
 	var err error
 	var aliasEcdsaPair *ecdsa.PrivateKey
-	aliasEcdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), passphrase)
+	aliasEcdsaPair, err = eigensdkecdsa.ReadKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), ecdsaAliasedPassphrase)
 	if err != nil {
 		// there was an error reading the alias key (either the file doesn't exist or it is corrupted), consider as if the alias doesn't exist
 		if c.String(flag.EcdsaPrivateKeyFlag.Name) != "" {
@@ -543,7 +543,7 @@ func RunGenerateAlias(c *cli.Context) error {
 	}
 
 	// Save the private key to a file
-	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasEcdsaPair, passphrase); err != nil {
+	if err = eigensdkecdsa.WriteKey(filepath.Join(keyStorePath, "ecdsaAliasedEncryptedWallet.json"), aliasEcdsaPair, ecdsaAliasedPassphrase); err != nil {
 		return cli.Exit(fmt.Sprintf("Error writing the ecdsaAliasedEncryptedWallet.json file %v", err), 1)
 	}
 

@@ -19,7 +19,6 @@ var commandEncrypt = &cli.Command{
 		flag.PassphraseFlag,
 		flag.BlsPassphraseFlag,
 		flag.EcdsaPassphraseFlag,
-		flag.EcdsaAliasedPassphraseFlag,
 		flag.KeyStorePathFlag,
 	},
 }
@@ -98,7 +97,7 @@ var commandGenerateAlias = &cli.Command{
 	Action:      runGenerateAlias,
 	Flags:       []cli.Flag{
 		flag.EcdsaPrivateKeyFlag,
-		flag.PassphraseFlag,
+		flag.EcdsaAliasedPassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.OverrideFlag,
 	},
