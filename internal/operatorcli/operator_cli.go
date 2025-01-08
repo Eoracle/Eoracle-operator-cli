@@ -452,14 +452,15 @@ func RunPrintStatus(c *cli.Context) error {
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Failed to load EOConfig contract %v", err), 1)
 	}
-	logger.Info("EOConfig contract", "address", eoConfigAddr, "operator address", operatorAddress, "alias address", operatorAliasAddress)
+	
 	operatorAlias, err := contractEOConfig.OperatorToAlias(&bind.CallOpts{Context: context.Background()}, operatorAddress)
 	if (err != nil) || (operatorAlias == (gethcommon.Address{})) {
 		return cli.Exit(fmt.Sprintf("Failed to get operator %v alias %v", operatorAddress, err), 1)
 	}
+	logger.Info("operator details", "operator address", operatorAddress, "alias address", operatorAliasAddress, "operator is EOA", operatorIsEOA)
 
 	if operatorAlias != operatorAliasAddress {
-		return cli.Exit(fmt.Sprintf("Operator alias %v does not match the expected alias %v", operatorAlias, operatorAliasAddress), 1)
+		return cli.Exit(fmt.Sprintf("Operator (%v) alias (%v) does not match the expected alias (%v)", operatorAddress, operatorAlias, operatorAliasAddress), 1)
 	}
 
 	var zeroID [32]byte
@@ -468,19 +469,14 @@ func RunPrintStatus(c *cli.Context) error {
 		cli.Exit(fmt.Sprintf("Error while GetOperatorId %v", err), 1)
 	}
 
-	status, err := avsClient.registryCoordinator.GetOperatorStatus(&bind.CallOpts{Context: context.Background()}, operatorAddress)
-	if err != nil {
-		cli.Exit(fmt.Sprintf("Error while GetOperatorStatus %v", err), 1)
-	}
-
 	if operatorIsEOA {
-		operatorBalance, err := eochainEthClient.BalanceAt(context.Background(), operatorAddress, nil)
+		balance, err := eochainEthClient.BalanceAt(context.Background(), operatorAddress, nil)
 		if err != nil {
 			cli.Exit(fmt.Sprintf("Error-1 while getting the operator balance %v", err), 1)
 		}
 
-		if operatorBalance.Cmp(big.NewInt(500000000000000000)) > 0 {
-			returnBalance := operatorBalance.Sub(operatorBalance, big.NewInt(500000000000000000))
+		if balance.Cmp(big.NewInt(500000000000000000)) > 0 {
+			returnBalance := balance.Sub(balance, big.NewInt(500000000000000000))
 			txSender, err := wallet.NewPrivateKeyWallet(eochainEthClient, signerV2, signerAddr, logger)
 			if err != nil {
 				return cli.Exit(fmt.Sprintf("Error-2 getting operator balance %v", operatorAddress), 1)
@@ -507,15 +503,14 @@ func RunPrintStatus(c *cli.Context) error {
 			if receipt.Status != 1 {
 				return cli.Exit(fmt.Sprintf("Error-6 getting operator balance %v", operatorAddress), 1)
 			}
-		}
-		
-		operatorBalance, err = eochainEthClient.BalanceAt(context.Background(), operatorAddress, nil)
-		if err != nil {
-			cli.Exit(fmt.Sprintf("Error-7 while getting the operator balance %v", err), 1)
-		}
-		logger.Info("Operator balance", "balance", operatorBalance)
-	
+		}	
 	}
+
+	status, err := avsClient.registryCoordinator.GetOperatorStatus(&bind.CallOpts{Context: context.Background()}, operatorAddress)
+	if err != nil {
+		cli.Exit(fmt.Sprintf("Error while GetOperatorStatus %v", err), 1)
+	}
+
 	switch status {
 	case 0:
 		logger.Info("Operator Status", "status", "NEVER REGISTERED")
@@ -532,6 +527,18 @@ func RunPrintStatus(c *cli.Context) error {
 		cli.Exit(fmt.Sprintf("Error while GetLatestStakeUpdate %v", err), 1)
 	}
 	logger.Info("Operator stake update", "stake", stake.Stake, "block number", stake.UpdateBlockNumber)
+
+	balance, err := eochainEthClient.BalanceAt(context.Background(), operatorAddress, nil)
+	if err != nil {
+		cli.Exit(fmt.Sprintf("Error-7 while getting the operator balance %v", err), 1)
+	}
+	logger.Info("Operator balance", "balance", balance)
+
+	balance, err = eochainEthClient.BalanceAt(context.Background(), operatorAliasAddress, nil)
+	if err != nil {
+		cli.Exit(fmt.Sprintf("Error-8 while getting the operator alias balance %v", err), 1)
+	}
+	logger.Info("Operator alias balance", "balance", balance)
 
 	return nil
 }
