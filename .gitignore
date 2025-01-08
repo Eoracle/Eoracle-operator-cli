@@ -26,5 +26,6 @@ go.work
 .keystore
 .DS_Store
 
-# Docker configuration
+# configuration
 .docker
+.env

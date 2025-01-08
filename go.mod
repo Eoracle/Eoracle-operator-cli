@@ -1,4 +1,4 @@
-module github.com/Eoracle/core-go
+module github.com/eoracle/eoracle-operator-cli
 
 go 1.21
 
