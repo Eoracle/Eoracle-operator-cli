@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Eoracle/core-go/internal/flag"
-	"github.com/Eoracle/core-go/internal/operatorcli"
+	"github.com/eoracle/eoracle-operator-cli/internal/flag"
+	"github.com/eoracle/eoracle-operator-cli/internal/operatorcli"
 	"github.com/urfave/cli/v2"
 )
 
@@ -69,10 +69,11 @@ var commandPrintStatus = &cli.Command{
 	Action:      runPrintStatus,
 	Flags: []cli.Flag{
 		flag.EthRPCFlag,
+		flag.EOChainEthRPCFlag,
+		flag.EOConfigAddressFlag,
 		flag.RegistryCoordinatorFlag,
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
-		flag.EcdsaPrivateKeyFlag,
 		flag.QuorumNumberFlag,
 	},
 }
