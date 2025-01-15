@@ -109,6 +109,20 @@ var commandDeclareAlias = &cli.Command{
 	},
 }
 
+
+var commandResetConfiguration = &cli.Command{
+	Name:        "reset-configuration",
+	Description: "Reset configuration in eOracle chain",
+	Action:      runResetConfiguration,
+	Flags: []cli.Flag{
+		flag.EthRPCFlag,
+		flag.EOChainEthRPCFlag,
+		flag.EOConfigAddressFlag,
+		flag.PassphraseFlag,
+		flag.KeyStorePathFlag,
+	},
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "operatorCli"
@@ -123,6 +137,7 @@ func main() {
 		commandGenerateBLSKey,
 		commandGenerateAlias,
 		commandDeclareAlias,
+		commandResetConfiguration,
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -161,4 +176,8 @@ func runGenerateAlias(c *cli.Context) error {
 
 func runDeclareAlias(c *cli.Context) error {
 	return operatorcli.RunDeclareAlias(c)
+}
+
+func runResetConfiguration(c *cli.Context) error {
+	return operatorcli.RunResetConfiguration(c)
 }
