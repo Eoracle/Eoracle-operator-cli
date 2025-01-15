@@ -758,6 +758,11 @@ func RunResetConfiguration(c *cli.Context) error {
 			if receipt.Status != 1 {
 				return cli.Exit(fmt.Sprintf("The transaction %v to reset the operator %v balance on eochain (%v) reverted", receipt.TxHash.Hex(), operatorAddress.Hex(), c.String(flag.EOChainEthRPCFlag.Name)), 1)
 			}
+
+			balance, err = eochainEthClient.BalanceAt(context.Background(), operatorAddress, nil)
+			if err != nil {
+				cli.Exit(fmt.Sprintf("Error while getting the operator (%v) balance %v on eoChain", operatorAddress, err), 1)
+			}
 		}
 		balanceInEth := new(big.Float).Quo(new(big.Float).SetInt(balance), new(big.Float).SetInt(big.NewInt(1e18)))
 		logger.Info("Operator balance", "operator address", operatorAddress.Hex(), "balance", balanceInEth.String())
