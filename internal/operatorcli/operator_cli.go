@@ -5,6 +5,7 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
+	"github.com/eoracle/eoracle-operator-cli/profile"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	"math/big"
@@ -120,12 +121,16 @@ func RunDecrypt(c *cli.Context) error {
 }
 
 func RunRegister(c *cli.Context) error {
+	networkProfile, err := profile.FromArgs(c)
+	if err != nil {
+		return err
+	}
+
 	passphrase := c.String(flag.PassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaPair *ecdsa.PrivateKey
 	var blsKeyPair *eigensdkbls.KeyPair
-	var err error
 
 	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
@@ -155,23 +160,19 @@ func RunRegister(c *cli.Context) error {
 		}
 	}
 
-	if c.String(flag.EthRPCFlag.Name) == "" {
-		return cli.Exit("eth-rpc is required", 1)
-	}
-
-	rpcClient, err := rpc.Dial(c.String(flag.EthRPCFlag.Name))
+	rpcClient, err := rpc.Dial(networkProfile.EthRPCEndpoint)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create read-only Eth client %v %v", c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Failed to create read-only Eth client %v %v", networkProfile.EthRPCEndpoint, err), 1)
 	}
 	ethClient := ethclient.NewClient(rpcClient)
 	chainIDBigInt, err := ethClient.ChainID(context.Background())
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error getting chainId (%v): %v", c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error getting chainId (%v): %v", networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: ecdsaPair}, chainIDBigInt)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the register transaction signer for operator %v on Ethereum mainnet/holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error creating the register transaction signer for operator %v on Ethereum mainnet/holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	var saltBytes [32]byte
@@ -203,11 +204,7 @@ func RunRegister(c *cli.Context) error {
 		chainValidatorG1PointSignature = ConvertToBN254G1Point(eigensdkbls.NewG1Point(x, y))
 	}
 
-	if c.String(flag.RegistryCoordinatorFlag.Name) == "" {
-		return cli.Exit("registry-coordinator is required", 1)
-	}
-	registryCoordinatorAddr := gethcommon.HexToAddress(c.String(flag.RegistryCoordinatorFlag.Name))
-	avsClient, err := buildAVSClient(registryCoordinatorAddr, ethClient, logger)
+	avsClient, err := buildAVSClient(networkProfile.RegistryCoordinatorAddress, ethClient, logger)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error creating AVS client %v", err), 1)
 	}
@@ -238,11 +235,11 @@ func RunRegister(c *cli.Context) error {
 		expiry,
 	)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error generating message to sign by operator %v on Ethereum mainnet/Holeskey (%v) using CalculateOperatorAVSRegistrationDigestHash %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error generating message to sign by operator %v on Ethereum mainnet/Holeskey (%v) using CalculateOperatorAVSRegistrationDigestHash %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 	operatorSignature, err := crypto.Sign(msgToSign[:], ecdsaPair)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error signing the message using CalculateOperatorAVSRegistrationDigestHash for operator %v on Ethereum mainnet/Holeskey (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error signing the message using CalculateOperatorAVSRegistrationDigestHash for operator %v on Ethereum mainnet/Holeskey (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	operatorSignature[64] += 27
@@ -254,7 +251,7 @@ func RunRegister(c *cli.Context) error {
 
 	txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the register transaction sender for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error creating the register transaction sender for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 	txMgr := txmgr.NewSimpleTxManager(txSender, ethClient, logger, signerAddr)
 
@@ -270,16 +267,16 @@ func RunRegister(c *cli.Context) error {
 		operatorSignatureWithSaltAndExpiry,
 	)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the register transaction for operator %v on Ethereum mainnet/Holeskey (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error creating the register transaction for operator %v on Ethereum mainnet/Holeskey (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	ctx := context.Background()
 	receipt, err := txMgr.Send(ctx, tx, true)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("register transaction for operator %v on Ethereum mainnet/Holesky (%v) failed %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("register transaction for operator %v on Ethereum mainnet/Holesky (%v) failed %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 	if receipt.Status != 1 {
-		return cli.Exit(fmt.Sprintf("register transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name)), 1)
+		return cli.Exit(fmt.Sprintf("register transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint), 1)
 	}
 
 	logger.Info("succesfully registered to eoracle AVS", "address", signerAddr, "tx hash", receipt.TxHash.Hex())
@@ -288,11 +285,14 @@ func RunRegister(c *cli.Context) error {
 }
 
 func RunDeregister(c *cli.Context) error {
+	networkProfile, err := profile.FromArgs(c)
+	if err != nil {
+		return err
+	}
 	passphrase := c.String(flag.PassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaPair *ecdsa.PrivateKey
-	var err error
 
 	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
@@ -314,38 +314,30 @@ func RunDeregister(c *cli.Context) error {
 		}
 	}
 
-	if c.String(flag.EthRPCFlag.Name) == "" {
-		return cli.Exit("eth-rpc is required", 1)
-	}
-
-	rpcClient, err := rpc.Dial(c.String(flag.EthRPCFlag.Name))
+	rpcClient, err := rpc.Dial(networkProfile.EthRPCEndpoint)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	ethClient := ethclient.NewClient(rpcClient)
 	chainIDBigInt, err := ethClient.ChainID(context.Background())
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("cannot get chainId (%v): %v", c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("cannot get chainId (%v): %v", networkProfile.EthRPCEndpoint, err), 1)
 	}
 
-	if c.String(flag.RegistryCoordinatorFlag.Name) == "" {
-		return cli.Exit("registry-coordinator is required", 1)
-	}
-	registryCoordinatorAddr := gethcommon.HexToAddress(c.String(flag.RegistryCoordinatorFlag.Name))
-	avsClient, err := buildAVSClient(registryCoordinatorAddr, ethClient, logger)
+	avsClient, err := buildAVSClient(networkProfile.RegistryCoordinatorAddress, ethClient, logger)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error creating AVS client %v", err), 1)
 	}
 
 	signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: ecdsaPair}, chainIDBigInt)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the deregister transaction signer for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error creating the deregister transaction signer for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the deregister transaction sender for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error creating the deregister transaction sender for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 	txMgr := txmgr.NewSimpleTxManager(txSender, ethClient, logger, signerAddr)
 
@@ -359,15 +351,15 @@ func RunDeregister(c *cli.Context) error {
 		[]byte{0},
 	)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the deregister transaction for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error creating the deregister transaction for operator %v on Ethereum mainnet/Holesky (%v) %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 	ctx := context.Background()
 	receipt, err := txMgr.Send(ctx, tx, true)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("deregister transaction for operator %v on Ethereum mainnet/Holesky (%v) failed %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("deregister transaction for operator %v on Ethereum mainnet/Holesky (%v) failed %v", crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint, err), 1)
 	}
 	if receipt.Status != 1 {
-		return cli.Exit(fmt.Sprintf("deregister transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name)), 1)
+		return cli.Exit(fmt.Sprintf("deregister transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ecdsaPair.PublicKey), networkProfile.EthRPCEndpoint), 1)
 	}
 	logger.Info("DeregisterOperator", "gas", receipt.GasUsed, "txHash", receipt.TxHash.Hex())
 
@@ -377,13 +369,16 @@ func RunDeregister(c *cli.Context) error {
 }
 
 func RunPrintStatus(c *cli.Context) error {
+	networkProfile, err := profile.FromArgs(c)
+	if err != nil {
+		return err
+	}
 	passphrase := c.String(flag.PassphraseFlag.Name)
 	keyStorePath := c.String(flag.KeyStorePathFlag.Name)
 
 	var ecdsaOperatorPair *ecdsa.PrivateKey
 	var ecdsaAliasPair *ecdsa.PrivateKey
 	operatorIsEOA := true
-	var err error
 
 	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
@@ -405,23 +400,14 @@ func RunPrintStatus(c *cli.Context) error {
 	}
 	operatorAliasAddress := crypto.PubkeyToAddress(ecdsaAliasPair.PublicKey)
 
-	if c.String(flag.EthRPCFlag.Name) == "" {
-		return cli.Exit("eth-rpc is required", 1)
-	}
-
-	rpcClient, err := rpc.Dial(c.String(flag.EthRPCFlag.Name))
+	rpcClient, err := rpc.Dial(networkProfile.EthRPCEndpoint)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", c.String(flag.EthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", networkProfile.EthRPCEndpoint, err), 1)
 	}
 
 	ethClient := ethclient.NewClient(rpcClient)
 
-	if c.String(flag.RegistryCoordinatorFlag.Name) == "" {
-		return cli.Exit("registry-coordinator is required", 1)
-	}
-	registryCoordinatorAddr := gethcommon.HexToAddress(c.String(flag.RegistryCoordinatorFlag.Name))
-
-	avsClient, err := buildAVSClient(registryCoordinatorAddr, ethClient, logger)
+	avsClient, err := buildAVSClient(networkProfile.RegistryCoordinatorAddress, ethClient, logger)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Failed to create AVS client %v", err), 1)
 	}
@@ -431,13 +417,13 @@ func RunPrintStatus(c *cli.Context) error {
 		operatorIsEOA = false
 	}
 
-	if c.String(flag.EOChainEthRPCFlag.Name) == "" {
+	if c.String(flag.EOChainRPCFlag.Name) == "" {
 		return cli.Exit("eochain-rpc-endpoint is required", 1)
 	}
 
-	eocChainRpcClient, err := rpc.Dial(c.String(flag.EOChainEthRPCFlag.Name))
+	eocChainRpcClient, err := rpc.Dial(c.String(flag.EOChainRPCFlag.Name))
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create EOChain Eth client %v %v", c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Failed to create EOChain Eth client %v %v", c.String(flag.EOChainRPCFlag.Name), err), 1)
 	}
 	eochainEthClient := ethclient.NewClient(eocChainRpcClient)
 
@@ -578,6 +564,11 @@ func RunGenerateAlias(c *cli.Context) error {
 }
 
 func RunDeclareAlias(c *cli.Context) error {
+	networkProfile, err := profile.FromArgs(c)
+	if err != nil {
+		return err
+	}
+
 	logger, err := logging.NewZapLogger(logging.Production)
 	if err != nil {
 		return cli.Exit(fmt.Sprintf("Error creating logger %v", err), 1)
@@ -603,41 +594,10 @@ func RunDeclareAlias(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("Failed to read ecdsaAliasedEncryptedWallet.json file %v", err), 1)
 	}
 
-	if c.String(flag.EOChainEthRPCFlag.Name) == "" {
-		return cli.Exit("eochain-eth-rpc is required", 1)
-	}
-
-	if c.String(flag.EOConfigAddressFlag.Name) == "" {
-		return cli.Exit("eoconfig is required", 1)
-	}
-	eoConfigAddr := gethcommon.HexToAddress(c.String(flag.EOConfigAddressFlag.Name))
-
-	rpcClient, err := rpc.Dial(c.String(flag.EOChainEthRPCFlag.Name))
+	txMgr, contractEOConfig, err := getTxMgrForEOChain(networkProfile, logger, ethEcdsaPair)
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+		return err
 	}
-	ethClient := ethclient.NewClient(rpcClient)
-
-	chainIDBigInt, err := ethClient.ChainID(context.Background())
-	if err != nil {
-		return cli.Exit(fmt.Sprintf("cannot get chainId (%v): %v", c.String(flag.EOChainEthRPCFlag.Name), err), 1)
-	}
-
-	contractEOConfig, err := eoconfig.NewEoconfig(eoConfigAddr, ethClient)
-	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to bind the eoconfig contract %v", err), 1)
-	}
-
-	signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: ethEcdsaPair}, chainIDBigInt)
-	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error creating the signer function for %v %v", crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), err), 1)
-	}
-
-	txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
-	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create transaction sender for declaring alias of operator %v on eoChain (%v) %v", crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), c.String(flag.EOChainEthRPCFlag.Name), err), 1)
-	}
-	txMgr := txmgr.NewSimpleTxManager(txSender, ethClient, logger, signerAddr)
 
 	noSendTxOpts, err := txMgr.GetNoSendTxOpts()
 	if err != nil {
@@ -659,7 +619,7 @@ func RunDeclareAlias(c *cli.Context) error {
 	}
 
 	if receipt.Status != 1 {
-		return cli.Exit(fmt.Sprintf("declareAlias transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), c.String(flag.EOChainEthRPCFlag.Name)), 1)
+		return cli.Exit(fmt.Sprintf("declareAlias transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), networkProfile.EOChainRPCEndpoint), 1)
 	}
 
 	logger.Info("succesfully declared an alias in the eochain", "Ethereum address", crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), "eochain address", crypto.PubkeyToAddress(aliasEcdsaPair.PublicKey), "tx hash", receipt.TxHash.Hex())
@@ -695,20 +655,20 @@ func RunResetConfiguration(c *cli.Context) error {
 	}
 	operatorAliasAddress := crypto.PubkeyToAddress(ecdsaAliasPair.PublicKey)
 
-	if c.String(flag.EOChainEthRPCFlag.Name) == "" {
+	if c.String(flag.EOChainRPCFlag.Name) == "" {
 		return cli.Exit("eochain-rpc-endpoint is required", 1)
 	}
 
-	rpcClient, err := rpc.Dial(c.String(flag.EOChainEthRPCFlag.Name))
+	rpcClient, err := rpc.Dial(c.String(flag.EOChainRPCFlag.Name))
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Failed to create EOChain Eth client %v %v", c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Failed to create EOChain Eth client %v %v", c.String(flag.EOChainRPCFlag.Name), err), 1)
 	}
 
 	eochainEthClient := ethclient.NewClient(rpcClient)
 
 	eochainChainIDBigInt, err := eochainEthClient.ChainID(context.Background())
 	if err != nil {
-		return cli.Exit(fmt.Sprintf("Error getting chainId (%v): %v", c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+		return cli.Exit(fmt.Sprintf("Error getting chainId (%v): %v", c.String(flag.EOChainRPCFlag.Name), err), 1)
 	}
 
 	eoConfigAddr := gethcommon.HexToAddress(c.String(flag.EOConfigAddressFlag.Name))
@@ -737,34 +697,34 @@ func RunResetConfiguration(c *cli.Context) error {
 			returnBalance := balance.Sub(balance, big.NewInt(500000000000000000))
 			signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: ecdsaOperatorPair}, eochainChainIDBigInt)
 			if err != nil {
-				return cli.Exit(fmt.Sprintf("Error creating the signer function for operator %v on eoChain (%v) %v", crypto.PubkeyToAddress(ecdsaOperatorPair.PublicKey), c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+				return cli.Exit(fmt.Sprintf("Error creating the signer function for operator %v on eoChain (%v) %v", crypto.PubkeyToAddress(ecdsaOperatorPair.PublicKey), c.String(flag.EOChainRPCFlag.Name), err), 1)
 			}
 
 			txSender, err := wallet.NewPrivateKeyWallet(eochainEthClient, signerV2, signerAddr, logger)
 			if err != nil {
-				return cli.Exit(fmt.Sprintf("Error creating the transaction sender for operator %v on eoChain (%v) %v", crypto.PubkeyToAddress(ecdsaOperatorPair.PublicKey), c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+				return cli.Exit(fmt.Sprintf("Error creating the transaction sender for operator %v on eoChain (%v) %v", crypto.PubkeyToAddress(ecdsaOperatorPair.PublicKey), c.String(flag.EOChainRPCFlag.Name), err), 1)
 			}
 			txMgr := txmgr.NewSimpleTxManager(txSender, eochainEthClient, logger, signerAddr)
 			txOpts, err := txMgr.GetNoSendTxOpts()
 			if err != nil {
-				return cli.Exit(fmt.Sprintf("Error generating transaction for resetting eochain gas balance of operator %v on eoChain (%v) %v", operatorAddress.Hex(), c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+				return cli.Exit(fmt.Sprintf("Error generating transaction for resetting eochain gas balance of operator %v on eoChain (%v) %v", operatorAddress.Hex(), c.String(flag.EOChainRPCFlag.Name), err), 1)
 			}
 			txOpts.Value = returnBalance
 
 			contractEOConfigRaw := eoconfig.EoconfigRaw{Contract: contractEOConfig}
 			tx, err := contractEOConfigRaw.Transfer(txOpts)
 			if err != nil {
-				return cli.Exit(fmt.Sprintf("Error reseting the operator %v balance on eochain (%v) %v", operatorAddress.Hex(), c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+				return cli.Exit(fmt.Sprintf("Error reseting the operator %v balance on eochain (%v) %v", operatorAddress.Hex(), c.String(flag.EOChainRPCFlag.Name), err), 1)
 			}
 
 			ctx := context.Background()
 			receipt, err := txMgr.Send(ctx, tx, true)
 			if err != nil {
-				return cli.Exit(fmt.Sprintf("Error sending the reset balance transaction of operator %v on eochain (%v) %v", operatorAddress.Hex(), c.String(flag.EOChainEthRPCFlag.Name), err), 1)
+				return cli.Exit(fmt.Sprintf("Error sending the reset balance transaction of operator %v on eochain (%v) %v", operatorAddress.Hex(), c.String(flag.EOChainRPCFlag.Name), err), 1)
 			}
 
 			if receipt.Status != 1 {
-				return cli.Exit(fmt.Sprintf("The transaction %v to reset the operator %v balance on eochain (%v) reverted", receipt.TxHash.Hex(), operatorAddress.Hex(), c.String(flag.EOChainEthRPCFlag.Name)), 1)
+				return cli.Exit(fmt.Sprintf("The transaction %v to reset the operator %v balance on eochain (%v) reverted", receipt.TxHash.Hex(), operatorAddress.Hex(), c.String(flag.EOChainRPCFlag.Name)), 1)
 			}
 
 			balance, err = eochainEthClient.BalanceAt(context.Background(), operatorAddress, nil)
@@ -858,4 +818,33 @@ func ConvertToBN254G2Point(input *eigensdkbls.G2Point) regcoord.BN254G2Point {
 		Y: [2]*big.Int{input.Y.A1.BigInt(big.NewInt(0)), input.Y.A0.BigInt(big.NewInt(0))},
 	}
 	return output
+}
+
+func getTxMgrForEOChain(networkProfile *profile.NetworkProfile, logger logging.Logger, ethEcdsaPair *ecdsa.PrivateKey) (*txmgr.SimpleTxManager, *eoconfig.Eoconfig, error) {
+	rpcClient, err := rpc.Dial(networkProfile.EOChainRPCEndpoint)
+	if err != nil {
+		return nil, nil, cli.Exit(fmt.Sprintf("Failed to create Eth client %v %v", networkProfile.EOChainRPCEndpoint, err), 1)
+	}
+	ethClient := ethclient.NewClient(rpcClient)
+
+	chainIDBigInt, err := ethClient.ChainID(context.Background())
+	if err != nil {
+		return nil, nil, cli.Exit(fmt.Sprintf("cannot get chainId (%v): %v", networkProfile.EOChainRPCEndpoint, err), 1)
+	}
+
+	signerV2, signerAddr, err := signerv2.SignerFromConfig(signerv2.Config{PrivateKey: ethEcdsaPair}, chainIDBigInt)
+	if err != nil {
+		return nil, nil, cli.Exit(fmt.Sprintf("Error creating the signer function for %v %v", crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), err), 1)
+	}
+	txSender, err := wallet.NewPrivateKeyWallet(ethClient, signerV2, signerAddr, logger)
+	if err != nil {
+		return nil, nil, cli.Exit(fmt.Sprintf("Failed to create transaction sender for declaring alias of operator %v on eoChain (%v) %v", crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), networkProfile.EOChainRPCEndpoint, err), 1)
+	}
+
+	contractEOConfig, err := eoconfig.NewEoconfig(networkProfile.EOConfigAddress, ethClient)
+	if err != nil {
+		return nil, nil, cli.Exit(fmt.Sprintf("Failed to bind the eoconfig contract %v", err), 1)
+	}
+
+	return txmgr.NewSimpleTxManager(txSender, ethClient, logger, signerAddr), contractEOConfig, nil
 }

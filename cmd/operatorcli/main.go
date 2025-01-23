@@ -35,6 +35,7 @@ var commandRegister = &cli.Command{
 	Description: "Register the operator",
 	Action:      runRegister,
 	Flags: []cli.Flag{
+		flag.ProfileFlag,
 		flag.EthRPCFlag,
 		flag.RegistryCoordinatorFlag,
 		flag.PassphraseFlag,
@@ -54,6 +55,7 @@ var commandDeregister = &cli.Command{
 	Description: "Deregister the operator",
 	Action:      runDeregister,
 	Flags: []cli.Flag{
+		flag.ProfileFlag,
 		flag.EthRPCFlag,
 		flag.RegistryCoordinatorFlag,
 		flag.PassphraseFlag,
@@ -68,8 +70,9 @@ var commandPrintStatus = &cli.Command{
 	Description: "Print the operator status",
 	Action:      runPrintStatus,
 	Flags: []cli.Flag{
+		flag.ProfileFlag,
 		flag.EthRPCFlag,
-		flag.EOChainEthRPCFlag,
+		flag.EOChainRPCFlag,
 		flag.EOConfigAddressFlag,
 		flag.RegistryCoordinatorFlag,
 		flag.PassphraseFlag,
@@ -89,7 +92,7 @@ var commandGenerateAlias = &cli.Command{
 	Name:        "generate-alias",
 	Description: "Create or Import an ECDSA private key only for oracle chain",
 	Action:      runGenerateAlias,
-	Flags:       []cli.Flag{
+	Flags: []cli.Flag{
 		flag.EcdsaPrivateKeyFlag,
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
@@ -101,22 +104,23 @@ var commandDeclareAlias = &cli.Command{
 	Name:        "declare-alias",
 	Description: "Declare the alias in the eochain",
 	Action:      runDeclareAlias,
-	Flags:       []cli.Flag{
+	Flags: []cli.Flag{
+		flag.ProfileFlag,
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
-		flag.EOChainEthRPCFlag,
+		flag.EOChainRPCFlag,
 		flag.EOConfigAddressFlag,
 	},
 }
-
 
 var commandResetConfiguration = &cli.Command{
 	Name:        "reset-configuration",
 	Description: "Reset configuration in eOracle chain",
 	Action:      runResetConfiguration,
 	Flags: []cli.Flag{
+		flag.ProfileFlag,
 		flag.EthRPCFlag,
-		flag.EOChainEthRPCFlag,
+		flag.EOChainRPCFlag,
 		flag.EOConfigAddressFlag,
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,

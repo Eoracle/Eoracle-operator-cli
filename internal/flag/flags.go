@@ -4,10 +4,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const (
-	EncyrptedEDCSAFile = "encryptedWallet.json"
-)
-
 var (
 	KeyStorePathFlag = &cli.StringFlag{
 		Name:        "keystore-path",
@@ -17,19 +13,15 @@ var (
 		Value:       ".keystore",
 	}
 	EthRPCFlag = &cli.StringFlag{
-		Name:    "eth-rpc-endpoint",
-		Usage:   "ethereum rpc url",
-		EnvVars: []string{"ETH_RPC_ENDPOINT"},
+		Name:     "eth-rpc-endpoint",
+		Usage:    "ethereum rpc url",
+		EnvVars:  []string{"ETH_RPC_ENDPOINT"},
+		Required: true,
 	}
 	RegistryCoordinatorFlag = &cli.StringFlag{
 		Name:    "registry-coordinator",
 		Usage:   "registry coordinator contract address",
 		EnvVars: []string{"EO_REGISTRY_COORDINATOR"},
-	}
-	StakeRegistryFlag = &cli.StringFlag{
-		Name:    "stake-registry",
-		Usage:   "stake registry contract address",
-		EnvVars: []string{"EO_STAKE_REGISTRY"},
 	}
 	EcdsaPrivateKeyFlag = &cli.StringFlag{
 		Name:    "ecdsa-private-key",
@@ -79,17 +71,10 @@ var (
 		DefaultText: "0",
 		Value:       0,
 	}
-	EOChainEthRPCFlag = &cli.StringFlag{
+	EOChainRPCFlag = &cli.StringFlag{
 		Name:    "eochain-rpc-endpoint",
 		Usage:   "eochain rpc url",
 		EnvVars: []string{"EO_CHAIN_RPC_ENDPOINT"},
-	}
-	EncryptOnlyFlag = &cli.BoolFlag{
-		Name:        "encrypt-only",
-		Usage:       "Indication if the key should be just encrypted",
-		EnvVars:     []string{"EO_CHAIN_ENCRYPT_ONLY"},
-		DefaultText: "False",
-		Value:       false,
 	}
 	OverrideFlag = &cli.BoolFlag{
 		Name:        "alias-override",
@@ -102,5 +87,12 @@ var (
 		Name:    "eoconfig-address",
 		Usage:   "eoconfig contract address",
 		EnvVars: []string{"EO_CONFIG_ADDRESS"},
+	}
+	ProfileFlag = &cli.StringFlag{
+		Name:        "profile",
+		Usage:       "Network to use: mainnet or testnet.",
+		DefaultText: "testnet",
+		EnvVars:     []string{"EO_PROFILE"},
+		Required:    true,
 	}
 )
