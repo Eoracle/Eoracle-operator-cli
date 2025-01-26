@@ -27,7 +27,7 @@ build-oprcli: check-go check-git
 		-X 'github.com/Eoracle/core-go/versioning.Commit=$(COMMIT_HASH)'\
 		-X 'github.com/Eoracle/core-go/versioning.Branch=$(BRANCH)'\
 		-X 'github.com/Eoracle/core-go/versioning.BuildTime=$(TIME)'" \
-	cmd/operatorcli/main.go
+	main.go
 
 .PHONY: build-oprcli-arm64
 build-oprcli-arm64: check-go check-git
@@ -36,7 +36,7 @@ build-oprcli-arm64: check-go check-git
 		-X 'github.com/Eoracle/core-go/versioning.Commit=$(COMMIT_HASH)'\
 		-X 'github.com/Eoracle/core-go/versioning.Branch=$(BRANCH)'\
 		-X 'github.com/Eoracle/core-go/versioning.BuildTime=$(TIME)'" \
-	cmd/operatorcli/main.go
+	main.go
 
 .PHONY: build-oprcli-amd64
 build-oprcli-amd64: check-go check-git
@@ -45,7 +45,7 @@ build-oprcli-amd64: check-go check-git
 		-X 'github.com/Eoracle/core-go/versioning.Commit=$(COMMIT_HASH)'\
 		-X 'github.com/Eoracle/core-go/versioning.Branch=$(BRANCH)'\
 		-X 'github.com/Eoracle/core-go/versioning.BuildTime=$(TIME)'" \
-	cmd/operatorcli/main.go
+	main.go
 
 # Build Docker images for AMD64 and ARM64
 .PHONY: docker-build-oprcli

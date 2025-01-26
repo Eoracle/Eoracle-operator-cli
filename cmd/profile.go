@@ -1,9 +1,8 @@
-package profile
+package cmd
 
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/eoracle/eoracle-operator-cli/internal/flag"
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/urfave/cli/v2"
 	"net/url"
@@ -37,46 +36,35 @@ var (
 	}
 )
 
-type NetworkProfile struct {
-	NetworkName string
+func setProfile(context *cli.Context) error {
+	profileName := context.String(ProfileFlag.Name)
 
-	EOConfigAddress            gethcommon.Address
-	RegistryCoordinatorAddress gethcommon.Address
-
-	EOChainRPCEndpoint string
-	EthRPCEndpoint     string
-}
-
-func FromArgs(c *cli.Context) (*NetworkProfile, error) {
-	profileName := c.String(flag.ProfileFlag.Name)
-
-	var networkProfile *NetworkProfile
 	switch profileName {
 	case MainnetProfileName:
-		networkProfile = &MainnetProfile
+		profile = &MainnetProfile
 	case TestnetProfileName:
-		networkProfile = &TestnetProfile
+		profile = &TestnetProfile
 	default:
-		return nil, fmt.Errorf("invalid profile name: %s", profileName)
+		return fmt.Errorf("invalid profile name: %s", profileName)
 	}
 
-	if err := overrideAddress(c, flag.EOConfigAddressFlag.Name, &networkProfile.EOConfigAddress); err != nil {
-		return nil, err
+	if err := overrideAddress(context, EOConfigAddressFlag.Name, &profile.EOConfigAddress); err != nil {
+		return err
 	}
 
-	if err := overrideAddress(c, flag.RegistryCoordinatorFlag.Name, &networkProfile.RegistryCoordinatorAddress); err != nil {
-		return nil, err
+	if err := overrideAddress(context, RegistryCoordinatorFlag.Name, &profile.RegistryCoordinatorAddress); err != nil {
+		return err
 	}
 
-	if err := overrideURL(c, flag.EOChainRPCFlag.Name, &networkProfile.EOChainRPCEndpoint); err != nil {
-		return nil, err
+	if err := overrideURL(context, EOChainRPCFlag.Name, &profile.EOChainRPCEndpoint); err != nil {
+		return err
 	}
 
-	if err := overrideURL(c, flag.EthRPCFlag.Name, &networkProfile.EthRPCEndpoint); err != nil {
-		return nil, err
+	if err := overrideURL(context, EthRPCFlag.Name, &profile.EthRPCEndpoint); err != nil {
+		return err
 	}
 
-	return networkProfile, nil
+	return nil
 }
 
 func overrideAddress(c *cli.Context, flagName string, address *gethcommon.Address) error {
