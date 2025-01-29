@@ -19,6 +19,7 @@ func NewResetConfigurationCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "reset-configuration",
 		Description: "Reset configuration in eOracle chain",
+		Before:      setProfile,
 		Action:      runResetConfiguration,
 		Flags: []cli.Flag{
 			ProfileFlag,

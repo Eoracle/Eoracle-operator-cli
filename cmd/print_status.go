@@ -17,6 +17,7 @@ func NewPrintStatusCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "print-status",
 		Description: "Print the operator status",
+		Before:      setProfile,
 		Action:      runPrintStatus,
 		Flags: []cli.Flag{
 			ProfileFlag,

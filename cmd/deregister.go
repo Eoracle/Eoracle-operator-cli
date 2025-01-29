@@ -14,6 +14,7 @@ func NewDeregisterCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "deregister",
 		Description: "Deregister the operator",
+		Before:      setProfile,
 		Action:      runDeregister,
 		Flags: []cli.Flag{
 			ProfileFlag,

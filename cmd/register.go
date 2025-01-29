@@ -24,6 +24,7 @@ func NewRegisterCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "register",
 		Description: "Register the operator",
+		Before:      setProfile,
 		Action:      runRegister,
 		Flags: []cli.Flag{
 			ProfileFlag,
