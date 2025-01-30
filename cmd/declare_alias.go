@@ -80,7 +80,7 @@ func runDeclareAlias(c *cli.Context) error {
 	return nil
 }
 
-func getTxMgrForEOChain(ethEcdsaPair *ecdsa.PrivateKey) (*txmgr.SimpleTxManager, *eoconfig.Eoconfig, error) {
+func getTxMgrForEOChain(ethEcdsaPair *ecdsa.PrivateKey) (*txmgr.SimpleTxManager, *eoconfig.EOConfig, error) {
 	ethClient, err := createEthClient(profile.EOChainRPCEndpoint)
 	if err != nil {
 		return nil, nil, err
@@ -101,7 +101,7 @@ func getTxMgrForEOChain(ethEcdsaPair *ecdsa.PrivateKey) (*txmgr.SimpleTxManager,
 			crypto.PubkeyToAddress(ethEcdsaPair.PublicKey), profile.EOChainRPCEndpoint, err)
 	}
 
-	contractEOConfig, err := eoconfig.NewEoconfig(profile.EOConfigAddress, ethClient)
+	contractEOConfig, err := eoconfig.NewEOConfig(profile.EOConfigAddress, ethClient)
 	if err != nil {
 		utils.Fatalf("Failed to bind the eoconfig contract %v", err)
 	}

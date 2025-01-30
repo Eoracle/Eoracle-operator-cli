@@ -74,3 +74,7 @@ docker-push-oprcli-latest:
 .PHONY: clean
 clean:
 	rm -rf $(BINARY_DIR)
+
+generate-bindings:
+	@echo "Generating bindings"
+	@go generate ./...

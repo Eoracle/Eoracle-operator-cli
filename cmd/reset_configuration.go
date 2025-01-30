@@ -102,7 +102,7 @@ func runResetConfiguration(c *cli.Context) error {
 		}
 		txOpts.Value = returnBalance
 
-		contractEOConfigRaw := eoconfig.EoconfigRaw{Contract: contractEOConfig}
+		contractEOConfigRaw := eoconfig.EOConfigRaw{Contract: contractEOConfig}
 		tx, err := contractEOConfigRaw.Transfer(txOpts)
 		if err != nil {
 			utils.Fatalf("Error reseting the operator %v balance on eochain (%v) %v", operatorAddress.Hex(), c.String(EOChainRPCFlag.Name), err)
@@ -131,6 +131,6 @@ func runResetConfiguration(c *cli.Context) error {
 	return nil
 }
 
-func getEOConfigContract(ethClient *ethclient.Client) (*eoconfig.Eoconfig, error) {
-	return eoconfig.NewEoconfig(profile.EOConfigAddress, ethClient)
+func getEOConfigContract(ethClient *ethclient.Client) (*eoconfig.EOConfig, error) {
+	return eoconfig.NewEOConfig(profile.EOConfigAddress, ethClient)
 }

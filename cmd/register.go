@@ -99,7 +99,7 @@ func runRegister(c *cli.Context) error {
 	G1pubkeyBN254 := convertToBN254G1Point(blsKeyPair.GetPubKeyG1())
 	G2pubkeyBN254 := convertToBN254G2Point(blsKeyPair.GetPubKeyG2())
 
-	pubkeyRegParams := regcoord.IEOBLSApkRegistryPubkeyRegistrationParams{
+	pubkeyRegParams := regcoord.IBLSApkRegistryTypesPubkeyRegistrationParams{
 		PubkeyRegistrationSignature: signedMsg,
 		ChainValidatorSignature:     chainValidatorG1PointSignature,
 		PubkeyG1:                    G1pubkeyBN254,
@@ -155,9 +155,10 @@ func runRegister(c *cli.Context) error {
 		utils.Fatalf("error creating transaction object %v", err)
 	}
 
-	tx, err := avsClient.registryCoordinator.RegisterOperator(
+	tx, err := avsClient.registryCoordinator.RegisterOperator0(
 		noSendTxOpts,
 		[]byte{0},
+		"0.0.0.0:0",
 		pubkeyRegParams,
 		operatorSignatureWithSaltAndExpiry,
 	)

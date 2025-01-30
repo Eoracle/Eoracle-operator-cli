@@ -65,7 +65,7 @@ func runPrintStatus(c *cli.Context) error {
 		return err
 	}
 
-	contractEOConfig, err := eoconfig.NewEoconfig(profile.EOConfigAddress, eoChainEthClient)
+	contractEOConfig, err := eoconfig.NewEOConfig(profile.EOConfigAddress, eoChainEthClient)
 	if err != nil {
 		utils.Fatalf("Failed to load EOConfig contract %v", err)
 	}

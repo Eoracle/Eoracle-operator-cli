@@ -81,7 +81,8 @@ func runDeregister(c *cli.Context) error {
 
 	tx, err := avsClient.registryCoordinator.DeregisterOperator(
 		noSendTxOpts,
-		[]byte{0},
+		crypto.PubkeyToAddress(ecdsaPair.PublicKey),
+		[]uint32{0},
 	)
 	if err != nil {
 		utils.Fatalf(

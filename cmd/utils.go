@@ -26,9 +26,9 @@ type avsClient struct {
 	serviceManagerAddr      gethcommon.Address
 	delegationManagerAddr   gethcommon.Address
 	avsDirectoryAddr        gethcommon.Address
-	registryCoordinator     *regcoord.ContractEORegistryCoordinator
+	registryCoordinator     *regcoord.EORegistryCoordinator
 	serviceManager          *smbase.ContractServiceManagerBase
-	stakeRegistry           *stakeregistry.ContractEOStakeRegistry
+	stakeRegistry           *stakeregistry.EOStakeRegistry
 	elReader                *elcontracts.ChainReader
 }
 
@@ -40,7 +40,7 @@ func buildAVSClient(
 		registryCoordinatorAddr: profile.RegistryCoordinatorAddress,
 	}
 
-	registryCoordinator, err := regcoord.NewContractEORegistryCoordinator(
+	registryCoordinator, err := regcoord.NewEORegistryCoordinator(
 		profile.RegistryCoordinatorAddress,
 		ethClient,
 	)
@@ -66,7 +66,7 @@ func buildAVSClient(
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("Failed to get stakeRegistryAddr %v", err))
 	}
-	stakeRegistry, err := stakeregistry.NewContractEOStakeRegistry(stakeRegistryAddr, ethClient)
+	stakeRegistry, err := stakeregistry.NewEOStakeRegistry(stakeRegistryAddr, ethClient)
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("Failed to create stakeRegistry contract %v", err))
 	}
