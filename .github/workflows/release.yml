@@ -36,9 +36,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Run GoReleaser build
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
-          version: latest
+          version: '1.21.13'
           args: build --clean --parallelism 3 --config build/.goreleaser-operatorcli.yml
 
       - name: Check if the release already exists
@@ -57,9 +57,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run GoReleaser Release
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
-          version: latest
+          version: '1.21.13'
           args: release --clean --parallelism 3 --config build/.goreleaser-operatorcli.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
