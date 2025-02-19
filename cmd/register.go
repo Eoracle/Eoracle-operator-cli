@@ -29,7 +29,9 @@ func NewRegisterCommand() *cli.Command {
 		Flags: []cli.Flag{
 			ProfileFlag,
 			EthRPCFlag,
+			EOChainRPCFlag,
 			RegistryCoordinatorFlag,
+			EOConfigAddressFlag,
 			PassphraseFlag,
 			KeyStorePathFlag,
 			SaltFlag,
@@ -95,7 +97,9 @@ func runRegister(c *cli.Context) error {
 		utils.Fatalf("Error getting PubkeyRegistrationMessageHash from registryCoordinator contract %v", err)
 	}
 
-	signedMsg := convertToBN254G1Point(blsKeyPair.SignHashedToCurveMessage(convertBn254GethToGnark(g1HashedMsgToSign)).G1Point)
+	signedMsg := convertToBN254G1Point(
+		blsKeyPair.SignHashedToCurveMessage(convertBn254GethToGnark(g1HashedMsgToSign)).G1Point,
+	)
 	G1pubkeyBN254 := convertToBN254G1Point(blsKeyPair.GetPubKeyG1())
 	G2pubkeyBN254 := convertToBN254G2Point(blsKeyPair.GetPubKeyG2())
 
@@ -149,11 +153,21 @@ func runRegister(c *cli.Context) error {
 		)
 	}
 
+	address, err := txSender.SenderAddress(context.Background())
+	if err != nil {
+		return err
+	}
+
+	addr := address.String()
+	logger.Info("sender address", "address", addr)
+
 	txMgr := txmgr.NewSimpleTxManager(txSender, ethClient, logger, signerAddr)
 	noSendTxOpts, err := txMgr.GetNoSendTxOpts()
 	if err != nil {
 		utils.Fatalf("error creating transaction object %v", err)
 	}
+
+	noSendTxOpts.GasLimit = 500_000
 
 	tx, err := avsClient.registryCoordinator.RegisterOperator0(
 		noSendTxOpts,
@@ -266,7 +280,7 @@ func getSaltBytes(c *cli.Context) ([32]byte, error) {
 }
 
 func getChainValidatorG1PointSignature(c *cli.Context) (regcoord.BN254G1Point, error) {
-	var chainValidatorG1PointSignature regcoord.BN254G1Point
+	chainValidatorG1PointSignature := convertToBN254G1Point(eigensdkbls.NewG1Point(big.NewInt(0), big.NewInt(0)))
 	if c.String(ValidatorRoleFlag.Name) != "DATA_VALIDATOR" {
 		if len(c.StringSlice(ChainValidatorG1PointSignatureFlag.Name)) != 2 {
 			utils.Fatalf("chain-validator-g1-point-signature is required or has too many values")

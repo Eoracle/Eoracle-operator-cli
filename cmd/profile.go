@@ -32,7 +32,7 @@ var (
 		RegistryCoordinatorAddress: gethcommon.HexToAddress("0xc4A6E362e8Bd89F28Eb405F9Aa533784884B9c4F"),
 
 		EOChainRPCEndpoint: "https://rpc.testnet.eoracle.network",
-		EthRPCEndpoint:     "https://ethereum-holesky-rpc.publicnode.com",
+		EthRPCEndpoint:     "https://holesky.gateway.tenderly.com",
 	}
 )
 
