@@ -127,7 +127,7 @@ func getOperatorAndAliasKeys(c *cli.Context) (*ecdsa.PrivateKey, *ecdsa.PrivateK
 		utils.Fatalf("Failed to read ecdsaEncryptedWallet.json file %v", err)
 	}
 
-	ecdsaAliasPair, err := eigensdkecdsa.ReadKey(filepath.Join(c.String(KeyStorePathFlag.Name), "ecdsaAliasedEncryptedWallet.json"), c.String(KeyStorePathFlag.Name))
+	ecdsaAliasPair, err := eigensdkecdsa.ReadKey(filepath.Join(c.String(KeyStorePathFlag.Name), "ecdsaAliasedEncryptedWallet.json"), c.String(PassphraseFlag.Name))
 	if err != nil {
 		utils.Fatalf("Failed to read ecdsaAliasedEncryptedWallet.json file %v", err)
 	}

@@ -64,7 +64,7 @@ func runDeclareAlias(c *cli.Context) error {
 
 	if receipt.Status != 1 {
 		utils.Fatalf(
-			"declareAlias transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted",
+			"declareAlias transaction %v for operator %v on eochain mainnet/testnet (%v) reverted",
 			receipt.TxHash.Hex(),
 			crypto.PubkeyToAddress(ethEcdsaPair.PublicKey),
 			profile.EOChainRPCEndpoint,
