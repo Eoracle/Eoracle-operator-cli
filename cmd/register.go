@@ -167,7 +167,7 @@ func runRegister(c *cli.Context) error {
 		utils.Fatalf("error creating transaction object %v", err)
 	}
 
-	noSendTxOpts.GasLimit = 500_000
+	noSendTxOpts.GasLimit = 2_000_000
 
 	tx, err := avsClient.registryCoordinator.RegisterOperator0(
 		noSendTxOpts,
