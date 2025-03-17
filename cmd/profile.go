@@ -3,10 +3,11 @@ package cmd
 import (
 	"encoding/hex"
 	"fmt"
-	gethcommon "github.com/ethereum/go-ethereum/common"
-	"github.com/urfave/cli/v2"
 	"net/url"
 	"strings"
+
+	gethcommon "github.com/ethereum/go-ethereum/common"
+	"github.com/urfave/cli/v2"
 )
 
 const (
@@ -92,9 +93,7 @@ func overrideURL(c *cli.Context, flagName string, urlStr *string) error {
 // IsValidAddress checks if provided string is a valid Ethereum address
 func isValidAddress(address string) error {
 	// remove 0x prefix if it exists
-	if strings.HasPrefix(address, "0x") {
-		address = address[2:]
-	}
+	address = strings.TrimPrefix(address, "0x")
 
 	// decode the address
 	decodedAddress, err := hex.DecodeString(address)

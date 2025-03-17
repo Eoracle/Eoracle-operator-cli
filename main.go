@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/eoracle/eoracle-operator-cli/cmd"
 	"github.com/urfave/cli/v2"
-	"os"
 )
 
 func main() {

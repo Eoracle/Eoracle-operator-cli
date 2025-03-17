@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"context"
+	"math/big"
+
 	"github.com/Layr-Labs/eigensdk-go/chainio/clients/wallet"
 	"github.com/Layr-Labs/eigensdk-go/chainio/txmgr"
 	"github.com/Layr-Labs/eigensdk-go/signerv2"
@@ -12,7 +14,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/urfave/cli/v2"
-	"math/big"
 )
 
 func NewResetConfigurationCommand() *cli.Command {

@@ -3,15 +3,7 @@ package cmd
 import (
 	"crypto/ecdsa"
 	"fmt"
-	"github.com/ethereum/go-ethereum/cmd/utils"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/urfave/cli/v2"
 	"path/filepath"
-
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	gethcommon "github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/Layr-Labs/eigensdk-go/chainio/clients/elcontracts"
 	smbase "github.com/Layr-Labs/eigensdk-go/contracts/bindings/ServiceManagerBase"
@@ -19,6 +11,13 @@ import (
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
 	regcoord "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EORegistryCoordinator"
 	stakeregistry "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOStakeRegistry"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/cmd/utils"
+	gethcommon "github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/urfave/cli/v2"
 )
 
 type avsClient struct {
@@ -46,47 +45,52 @@ func buildAVSClient(
 	)
 
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to create RegistryCoordinator contract %v", err))
+		return nil, fmt.Errorf("failed to create RegistryCoordinator contract %v", err)
 	}
 	avsClient.registryCoordinator = registryCoordinator
 
 	serviceManagerAddr, err := registryCoordinator.ServiceManager(&bind.CallOpts{})
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to get ServiceManager from registryCoordinator contract %v", err))
+		return nil, fmt.Errorf("failed to get ServiceManager from registryCoordinator contract %v", err)
 	}
 	avsClient.serviceManagerAddr = serviceManagerAddr
 
 	serviceManager, err := smbase.NewContractServiceManagerBase(serviceManagerAddr, ethClient)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to create serviceManager contract %v", err))
+		return nil, fmt.Errorf("failed to create serviceManager contract %v", err)
 	}
 	avsClient.serviceManager = serviceManager
 
 	stakeRegistryAddr, err := registryCoordinator.StakeRegistry(&bind.CallOpts{})
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to get stakeRegistryAddr %v", err))
+		return nil, fmt.Errorf("failed to get stakeRegistryAddr %v", err)
 	}
 	stakeRegistry, err := stakeregistry.NewEOStakeRegistry(stakeRegistryAddr, ethClient)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to create stakeRegistry contract %v", err))
+		return nil, fmt.Errorf("failed to create stakeRegistry contract %v", err)
 	}
 	avsClient.stakeRegistry = stakeRegistry
 
 	delegationManagerAddr, err := stakeRegistry.Delegation(&bind.CallOpts{})
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to get delegationManagerAddr %v", err))
+		return nil, fmt.Errorf("failed to get delegationManagerAddr %v", err)
 	}
 	avsClient.delegationManagerAddr = delegationManagerAddr
 
 	avsDirectoryAddr, err := serviceManager.AvsDirectory(&bind.CallOpts{})
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to get avsDirectoryAddr %v", err))
+		return nil, fmt.Errorf("failed to get avsDirectoryAddr %v", err)
 	}
 	avsClient.avsDirectoryAddr = avsDirectoryAddr
 
-	elReader, err := elcontracts.BuildELChainReader(delegationManagerAddr, avsDirectoryAddr, ethClient, logger)
+	elConfig := elcontracts.Config{
+		RewardsCoordinatorAddress: 	 gethcommon.Address{},
+		PermissionControllerAddress: gethcommon.Address{},
+		DontUseAllocationManager: 	 true,
+	}
+	elReader, _, err := elcontracts.BuildReadClients(elConfig, ethClient, logger, nil)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("Failed to create ELChainReader %v", err))
+		return nil, fmt.Errorf("failed to create ELChainReader %v", err)
 	}
 	avsClient.elReader = elReader
 

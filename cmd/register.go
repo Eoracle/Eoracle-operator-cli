@@ -4,6 +4,10 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"math/big"
+	"path/filepath"
+	"strings"
+
 	"github.com/Layr-Labs/eigensdk-go/chainio/clients/wallet"
 	"github.com/Layr-Labs/eigensdk-go/chainio/txmgr"
 	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
@@ -15,9 +19,6 @@ import (
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/urfave/cli/v2"
-	"math/big"
-	"path/filepath"
-	"strings"
 )
 
 func NewRegisterCommand() *cli.Command {

@@ -4,11 +4,12 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
+	"path/filepath"
+
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/urfave/cli/v2"
-	"path/filepath"
 )
 
 func NewGenerateAliasCommand() *cli.Command {
