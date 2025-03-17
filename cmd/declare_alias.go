@@ -38,6 +38,9 @@ func runDeclareAlias(c *cli.Context) error {
 		return err
 	}
 
+	signerAddress := crypto.PubkeyToAddress(ethEcdsaPair.PublicKey)
+	logger.Infof("Declaring alias with signer: %s", signerAddress.String())
+
 	txMgr, contractEOConfig, err := getTxMgrForEOChain(ethEcdsaPair)
 	if err != nil {
 		return err
