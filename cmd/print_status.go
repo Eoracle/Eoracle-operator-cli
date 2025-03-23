@@ -61,7 +61,7 @@ func runPrintStatus(c *cli.Context) error {
 		return err
 	}
 
-	eoChainEthClient, err := createEthClient(c.String(EOChainRPCFlag.Name))
+	eoChainEthClient, err := createEthClient(profile.EOChainRPCEndpoint)
 	if err != nil {
 		return err
 	}
