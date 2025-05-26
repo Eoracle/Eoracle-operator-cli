@@ -1,4 +1,4 @@
-module github.com/eoracle/eoracle-operator-cli
+module github.com/eodata/operator-cli
 
 go 1.21
 

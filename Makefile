@@ -8,8 +8,8 @@ TIME=$(shell date)
 SRC_DIR=cmd/operatorcli
 
 # Set the Docker image names
-DOCKER_IMAGE_OPR_CLI_AMD64=eoracle/opr_cli:v$(VERSION)-amd64
-DOCKER_IMAGE_OPR_CLI_ARM64=eoracle/opr_cli:v$(VERSION)-arm64
+DOCKER_IMAGE_OPR_CLI_AMD64=eodata/opr_cli:v$(VERSION)-amd64
+DOCKER_IMAGE_OPR_CLI_ARM64=eodata/opr_cli:v$(VERSION)-arm64
 
 
 .PHONY: check-git
@@ -67,8 +67,8 @@ docker-push-oprcli-no-latest:
 
 .PHONY: docker-push-oprcli-latest
 docker-push-oprcli-latest:
-	docker tag $(DOCKER_IMAGE_OPR_CLI_AMD64) eoracle/opr_cli:latest
-	docker push eoracle/opr_cli:latest
+	docker tag $(DOCKER_IMAGE_OPR_CLI_AMD64) eodata/opr_cli:latest
+	docker push eodata/opr_cli:latest
 	# Clean target, removes the binaries
 
 .PHONY: clean
