@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/eoracle/eoracle-operator-cli/internal/flag"
-	"github.com/eoracle/eoracle-operator-cli/internal/operatorcli"
+	"github.com/eodata/operator-cli/internal/flag"
+	"github.com/eodata/operator-cli/internal/operatorcli"
 	"github.com/urfave/cli/v2"
 )
 
@@ -89,7 +89,7 @@ var commandGenerateAlias = &cli.Command{
 	Name:        "generate-alias",
 	Description: "Create or Import an ECDSA private key only for oracle chain",
 	Action:      runGenerateAlias,
-	Flags:       []cli.Flag{
+	Flags: []cli.Flag{
 		flag.EcdsaPrivateKeyFlag,
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
@@ -101,7 +101,7 @@ var commandDeclareAlias = &cli.Command{
 	Name:        "declare-alias",
 	Description: "Declare the alias in the eochain",
 	Action:      runDeclareAlias,
-	Flags:       []cli.Flag{
+	Flags: []cli.Flag{
 		flag.PassphraseFlag,
 		flag.KeyStorePathFlag,
 		flag.EOChainEthRPCFlag,
@@ -109,10 +109,9 @@ var commandDeclareAlias = &cli.Command{
 	},
 }
 
-
 var commandResetConfiguration = &cli.Command{
 	Name:        "reset-configuration",
-	Description: "Reset configuration in eOracle chain",
+	Description: "Reset configuration in EO chain",
 	Action:      runResetConfiguration,
 	Flags: []cli.Flag{
 		flag.EthRPCFlag,
@@ -126,7 +125,7 @@ var commandResetConfiguration = &cli.Command{
 func main() {
 	app := cli.NewApp()
 	app.Name = "operatorCli"
-	app.Description = "Eoracle generate operator signature and message for registration"
+	app.Description = "EO generate operator signature and message for registration"
 	app.Usage = "Used to create operator signature and message for registration"
 	app.Commands = []*cli.Command{
 		commandEncrypt,

@@ -28,11 +28,11 @@ import (
 	"github.com/Layr-Labs/eigensdk-go/logging"
 	"github.com/Layr-Labs/eigensdk-go/signerv2"
 
-	regcoord "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EORegistryCoordinator"
-	stakeregistry "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOStakeRegistry"
+	regcoord "github.com/eodata/operator-cli/contracts/bindings/EORegistryCoordinator"
+	stakeregistry "github.com/eodata/operator-cli/contracts/bindings/EOStakeRegistry"
 
-	eoconfig "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOConfig"
-	"github.com/eoracle/eoracle-operator-cli/internal/flag"
+	eoconfig "github.com/eodata/operator-cli/contracts/bindings/EOConfig"
+	"github.com/eodata/operator-cli/internal/flag"
 )
 
 type avsClient struct {
@@ -281,7 +281,7 @@ func RunRegister(c *cli.Context) error {
 		return cli.Exit(fmt.Sprintf("register transaction %v for operator %v on Ethereum mainnet/Holesky (%v) reverted", receipt.TxHash.Hex(), crypto.PubkeyToAddress(ecdsaPair.PublicKey), c.String(flag.EthRPCFlag.Name)), 1)
 	}
 
-	logger.Info("succesfully registered to eoracle AVS", "address", signerAddr, "tx hash", receipt.TxHash.Hex())
+	logger.Info("succesfully registered to EO AVS", "address", signerAddr, "tx hash", receipt.TxHash.Hex())
 
 	return nil
 }
@@ -369,7 +369,7 @@ func RunDeregister(c *cli.Context) error {
 	}
 	logger.Info("DeregisterOperator", "gas", receipt.GasUsed, "txHash", receipt.TxHash.Hex())
 
-	logger.Info("succesfully deregistered from eoracle AVS", "address", signerAddr, "tx hash", receipt.TxHash.Hex())
+	logger.Info("succesfully deregistered from EO AVS", "address", signerAddr, "tx hash", receipt.TxHash.Hex())
 
 	return nil
 }
@@ -485,7 +485,7 @@ func RunPrintStatus(c *cli.Context) error {
 		cli.Exit(fmt.Sprintf("Error-7 while getting the operator balance %v", err), 1)
 	}
 	balanceInEth := new(big.Float).Quo(new(big.Float).SetInt(balance), new(big.Float).SetInt(big.NewInt(1e18)))
-	logger.Info("Operator balance is expected", "operator address", operatorAddress.Hex(), "balance", balanceInEth.String())	
+	logger.Info("Operator balance is expected", "operator address", operatorAddress.Hex(), "balance", balanceInEth.String())
 
 	balance, err = eochainEthClient.BalanceAt(context.Background(), operatorAliasAddress, nil)
 	if err != nil {
@@ -716,7 +716,7 @@ func RunResetConfiguration(c *cli.Context) error {
 	logger.Info("operator details", "operator address", operatorAddress.Hex(), "alias address", operatorAliasAddress.Hex(), "operator is EOA", operatorIsEOA)
 
 	if operatorAlias != operatorAliasAddress {
-		return cli.Exit(fmt.Sprintf("Operator (%v) alias (%v) does not match the expected alias (%v), please contact eOracle support", operatorAddress.Hex(), operatorAlias.Hex(), operatorAliasAddress.Hex()), 1)
+		return cli.Exit(fmt.Sprintf("Operator (%v) alias (%v) does not match the expected alias (%v), please contact EO support", operatorAddress.Hex(), operatorAlias.Hex(), operatorAliasAddress.Hex()), 1)
 	}
 
 	if operatorIsEOA {

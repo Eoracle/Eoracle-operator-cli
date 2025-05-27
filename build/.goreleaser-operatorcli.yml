@@ -46,7 +46,7 @@ dockers:
   -
     # Specifies the Docker image's name (repository). You can use templating here as well.
     image_templates:
-      - "eoracle/opr_cli:{{ .Tag }}-amd64"
+      - "eodata/opr_cli:{{ .Tag }}-amd64"
 
     # Path to the Dockerfile (relative to the project root)
     dockerfile: "Dockerfile-oprcli"
@@ -68,7 +68,7 @@ dockers:
   -
     # Specifies the Docker image's name (repository). You can use templating here as well.
     image_templates:
-      - "eoracle/opr_cli:{{ .Tag }}-arm64"
+      - "eodata/opr_cli:{{ .Tag }}-arm64"
 
     # Path to the Dockerfile (relative to the project root)
     dockerfile: "Dockerfile-oprcli"
@@ -89,10 +89,10 @@ dockers:
       - "ARCH=arm64"
 docker_manifests:
   -
-    name_template: "eoracle/opr_cli:{{ .Tag }}"
+    name_template: "eodata/opr_cli:{{ .Tag }}"
     image_templates:
-      - "eoracle/opr_cli:{{ .Tag }}-amd64"
-      - "eoracle/opr_cli:{{ .Tag }}-arm64"
+      - "eodata/opr_cli:{{ .Tag }}-amd64"
+      - "eodata/opr_cli:{{ .Tag }}-arm64"
  
 # You can define additional sections below to customize GoReleaser further, such as:
 # - release configuration
