@@ -117,3 +117,7 @@ docker-build-%: ## Build Docker image for a specific platform
 docker-push-no-latest: ## Push Docker images without latest tag
 	docker push $(DOCKER_IMAGE):$(VERSION)-amd64
 	docker push $(DOCKER_IMAGE):$(VERSION)-arm64
+
+generate-bindings:
+	@echo "Generating bindings"
+	@go generate ./...

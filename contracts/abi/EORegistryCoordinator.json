@@ -3,39 +3,53 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_serviceManager",
-        "type": "address",
-        "internalType": "contract IServiceManager"
-      },
-      {
-        "name": "_stakeRegistry",
-        "type": "address",
-        "internalType": "contract IEOStakeRegistry"
-      },
-      {
-        "name": "_blsApkRegistry",
-        "type": "address",
-        "internalType": "contract IEOBLSApkRegistry"
-      },
-      {
-        "name": "_indexRegistry",
-        "type": "address",
-        "internalType": "contract IEOIndexRegistry"
-      },
-      {
-        "name": "_socketRegistry",
-        "type": "address",
-        "internalType": "contract ISocketRegistry"
-      },
-      {
-        "name": "_allocationManager",
-        "type": "address",
-        "internalType": "contract IAllocationManager"
-      },
-      {
-        "name": "_pauserRegistry",
-        "type": "address",
-        "internalType": "contract IPauserRegistry"
+        "name": "params",
+        "type": "tuple",
+        "internalType": "struct IRegistryCoordinatorTypes.RegistryCoordinatorParams",
+        "components": [
+          {
+            "name": "serviceManager",
+            "type": "address",
+            "internalType": "contract IServiceManager"
+          },
+          {
+            "name": "slashingParams",
+            "type": "tuple",
+            "internalType": "struct IRegistryCoordinatorTypes.SlashingRegistryParams",
+            "components": [
+              {
+                "name": "stakeRegistry",
+                "type": "address",
+                "internalType": "contract IStakeRegistry"
+              },
+              {
+                "name": "blsApkRegistry",
+                "type": "address",
+                "internalType": "contract IBLSApkRegistry"
+              },
+              {
+                "name": "indexRegistry",
+                "type": "address",
+                "internalType": "contract IIndexRegistry"
+              },
+              {
+                "name": "socketRegistry",
+                "type": "address",
+                "internalType": "contract ISocketRegistry"
+              },
+              {
+                "name": "allocationManager",
+                "type": "address",
+                "internalType": "contract IAllocationManager"
+              },
+              {
+                "name": "pauserRegistry",
+                "type": "address",
+                "internalType": "contract IPauserRegistry"
+              }
+            ]
+          }
+        ]
       }
     ],
     "stateMutability": "nonpayable"
@@ -68,19 +82,6 @@
   },
   {
     "type": "function",
-    "name": "accountIdentifier",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "allocationManager",
     "inputs": [],
     "outputs": [
@@ -94,13 +95,26 @@
   },
   {
     "type": "function",
+    "name": "avs",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "blsApkRegistry",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IEOBLSApkRegistry"
+        "internalType": "contract IBLSApkRegistry"
       }
     ],
     "stateMutability": "view"
@@ -145,6 +159,25 @@
         "name": "expiry",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "calculatePubkeyRegistrationMessageHash",
+    "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [
@@ -301,6 +334,11 @@
         "internalType": "address"
       },
       {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
         "name": "operatorSetIds",
         "type": "uint32[]",
         "internalType": "uint32[]"
@@ -328,6 +366,62 @@
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "domainSeparator",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "eip712Domain",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "fields",
+        "type": "bytes1",
+        "internalType": "bytes1"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "version",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "chainId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "verifyingContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "salt",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "extensions",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -372,13 +466,6 @@
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "enableOperatorSets",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -644,7 +731,7 @@
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IEOIndexRegistry"
+        "internalType": "contract IIndexRegistry"
       }
     ],
     "stateMutability": "view"
@@ -654,27 +741,27 @@
     "name": "initialize",
     "inputs": [
       {
-        "name": "_initialOwner",
+        "name": "initialOwner",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_churnApprover",
+        "name": "churnApprover",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_ejector",
+        "name": "ejector",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_initialPausedStatus",
+        "name": "initialPausedStatus",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "_accountIdentifier",
+        "name": "avs",
         "type": "address",
         "internalType": "address"
       }
@@ -722,6 +809,19 @@
   },
   {
     "type": "function",
+    "name": "isM2QuorumRegistrationDisabled",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "lastEjectionTimestamp",
     "inputs": [
       {
@@ -741,20 +841,7 @@
   },
   {
     "type": "function",
-    "name": "m2QuorumsDisabled",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "numRegistries",
+    "name": "m2QuorumBitmap",
     "inputs": [],
     "outputs": [
       {
@@ -924,29 +1011,6 @@
     "name": "registerOperator",
     "inputs": [
       {
-        "name": "operator",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "operatorSetIds",
-        "type": "uint32[]",
-        "internalType": "uint32[]"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "registerOperator",
-    "inputs": [
-      {
         "name": "quorumNumbers",
         "type": "bytes",
         "internalType": "bytes"
@@ -963,23 +1027,6 @@
         "components": [
           {
             "name": "pubkeyRegistrationSignature",
-            "type": "tuple",
-            "internalType": "struct BN254.G1Point",
-            "components": [
-              {
-                "name": "X",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "Y",
-                "type": "uint256",
-                "internalType": "uint256"
-              }
-            ]
-          },
-          {
-            "name": "chainValidatorSignature",
             "type": "tuple",
             "internalType": "struct BN254.G1Point",
             "components": [
@@ -1034,7 +1081,7 @@
       {
         "name": "operatorSignature",
         "type": "tuple",
-        "internalType": "struct ISignatureUtils.SignatureWithSaltAndExpiry",
+        "internalType": "struct ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry",
         "components": [
           {
             "name": "signature",
@@ -1052,6 +1099,34 @@
             "internalType": "uint256"
           }
         ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "registerOperator",
+    "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "operatorSetIds",
+        "type": "uint32[]",
+        "internalType": "uint32[]"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -1078,23 +1153,6 @@
         "components": [
           {
             "name": "pubkeyRegistrationSignature",
-            "type": "tuple",
-            "internalType": "struct BN254.G1Point",
-            "components": [
-              {
-                "name": "X",
-                "type": "uint256",
-                "internalType": "uint256"
-              },
-              {
-                "name": "Y",
-                "type": "uint256",
-                "internalType": "uint256"
-              }
-            ]
-          },
-          {
-            "name": "chainValidatorSignature",
             "type": "tuple",
             "internalType": "struct BN254.G1Point",
             "components": [
@@ -1166,7 +1224,7 @@
       {
         "name": "churnApproverSignature",
         "type": "tuple",
-        "internalType": "struct ISignatureUtils.SignatureWithSaltAndExpiry",
+        "internalType": "struct ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry",
         "components": [
           {
             "name": "signature",
@@ -1188,7 +1246,7 @@
       {
         "name": "operatorSignature",
         "type": "tuple",
-        "internalType": "struct ISignatureUtils.SignatureWithSaltAndExpiry",
+        "internalType": "struct ISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry",
         "components": [
           {
             "name": "signature",
@@ -1210,25 +1268,6 @@
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "registries",
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -1252,10 +1291,10 @@
   },
   {
     "type": "function",
-    "name": "setAccountIdentifier",
+    "name": "setAVS",
     "inputs": [
       {
-        "name": "_accountIdentifier",
+        "name": "_avs",
         "type": "address",
         "internalType": "address"
       }
@@ -1371,7 +1410,26 @@
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IEOStakeRegistry"
+        "internalType": "contract IStakeRegistry"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "supportsAVS",
+    "inputs": [
+      {
+        "name": "_avs",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
@@ -1447,6 +1505,38 @@
     "stateMutability": "nonpayable"
   },
   {
+    "type": "function",
+    "name": "version",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "AVSUpdated",
+    "inputs": [
+      {
+        "name": "prevAVS",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "newAVS",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "type": "event",
     "name": "ChainManagerUpdated",
     "inputs": [
@@ -1486,6 +1576,31 @@
   },
   {
     "type": "event",
+    "name": "EIP712DomainChanged",
+    "inputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EjectionCooldownUpdated",
+    "inputs": [
+      {
+        "name": "prevEjectionCooldown",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newEjectionCooldown",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "EjectorUpdated",
     "inputs": [
       {
@@ -1518,7 +1633,7 @@
   },
   {
     "type": "event",
-    "name": "M2QuorumsDisabled",
+    "name": "M2QuorumRegistrationDisabled",
     "inputs": [],
     "anonymous": false
   },
@@ -1680,6 +1795,78 @@
   },
   {
     "type": "event",
+    "name": "QuorumCreated",
+    "inputs": [
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "indexed": true,
+        "internalType": "uint8"
+      },
+      {
+        "name": "operatorSetParams",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct ISlashingRegistryCoordinatorTypes.OperatorSetParam",
+        "components": [
+          {
+            "name": "maxOperatorCount",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "kickBIPsOfOperatorStake",
+            "type": "uint16",
+            "internalType": "uint16"
+          },
+          {
+            "name": "kickBIPsOfTotalStake",
+            "type": "uint16",
+            "internalType": "uint16"
+          }
+        ]
+      },
+      {
+        "name": "minimumStake",
+        "type": "uint96",
+        "indexed": false,
+        "internalType": "uint96"
+      },
+      {
+        "name": "strategyParams",
+        "type": "tuple[]",
+        "indexed": false,
+        "internalType": "struct IStakeRegistryTypes.StrategyParams[]",
+        "components": [
+          {
+            "name": "strategy",
+            "type": "address",
+            "internalType": "contract IStrategy"
+          },
+          {
+            "name": "multiplier",
+            "type": "uint96",
+            "internalType": "uint96"
+          }
+        ]
+      },
+      {
+        "name": "stakeType",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "enum IStakeRegistryTypes.StakeType"
+      },
+      {
+        "name": "lookAheadPeriod",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Unpaused",
     "inputs": [
       {
@@ -1710,11 +1897,6 @@
   {
     "type": "error",
     "name": "BitmapEmpty",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "BitmapUpdateIsAfterBlockNumber",
     "inputs": []
   },
   {
@@ -1779,6 +1961,11 @@
   },
   {
     "type": "error",
+    "name": "InvalidAVS",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidNewPausedStatus",
     "inputs": []
   },
@@ -1794,22 +1981,22 @@
   },
   {
     "type": "error",
-    "name": "InvalidSignature",
+    "name": "LookAheadPeriodTooLong",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "M2QuorumsAlreadyDisabled",
+    "name": "M2QuorumRegistrationIsDisabled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MaxOperatorCountReached",
     "inputs": []
   },
   {
     "type": "error",
     "name": "MaxQuorumsReached",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "NextBitmapUpdateIsBeforeBlockNumber",
     "inputs": []
   },
   {
@@ -1839,12 +2026,27 @@
   },
   {
     "type": "error",
+    "name": "OnlyM2QuorumsAllowed",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "OnlyPauser",
     "inputs": []
   },
   {
     "type": "error",
     "name": "OnlyUnpauser",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OperatorNotRegistered",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OperatorNotRegisteredForQuorum",
     "inputs": []
   },
   {
@@ -1876,5 +2078,16 @@
     "type": "error",
     "name": "SignatureExpired",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "StringTooLong",
+    "inputs": [
+      {
+        "name": "str",
+        "type": "string",
+        "internalType": "string"
+      }
+    ]
   }
 ]

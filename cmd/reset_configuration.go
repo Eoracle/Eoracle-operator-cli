@@ -7,7 +7,7 @@ import (
 	"github.com/Layr-Labs/eigensdk-go/chainio/clients/wallet"
 	"github.com/Layr-Labs/eigensdk-go/chainio/txmgr"
 	"github.com/Layr-Labs/eigensdk-go/signerv2"
-	eoconfig "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOConfig"
+	eoconfig "github.com/eodata/operator-cli/contracts/bindings/EOConfig"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	gethcommon "github.com/ethereum/go-ethereum/common"

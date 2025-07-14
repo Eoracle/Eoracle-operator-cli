@@ -7,6 +7,7 @@ import (
 	"github.com/Layr-Labs/eigensdk-go/chainio/txmgr"
 	"github.com/Layr-Labs/eigensdk-go/signerv2"
 	"github.com/ethereum/go-ethereum/cmd/utils"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/urfave/cli/v2"
 )
@@ -83,6 +84,7 @@ func runDeregister(c *cli.Context) error {
 	tx, err := avsClient.registryCoordinator.DeregisterOperator(
 		noSendTxOpts,
 		crypto.PubkeyToAddress(ecdsaPair.PublicKey),
+		common.Address{},
 		[]uint32{0},
 	)
 	if err != nil {

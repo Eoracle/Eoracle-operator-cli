@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	eoconfig "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOConfig"
+	eoconfig "github.com/eodata/operator-cli/contracts/bindings/EOConfig"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	gethcommon "github.com/ethereum/go-ethereum/common"

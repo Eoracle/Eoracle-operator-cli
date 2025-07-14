@@ -44,13 +44,28 @@ type BN254G2Point struct {
 // IBLSApkRegistryTypesPubkeyRegistrationParams is an auto generated low-level Go binding around an user-defined struct.
 type IBLSApkRegistryTypesPubkeyRegistrationParams struct {
 	PubkeyRegistrationSignature BN254G1Point
-	ChainValidatorSignature     BN254G1Point
 	PubkeyG1                    BN254G1Point
 	PubkeyG2                    BN254G2Point
 }
 
-// ISignatureUtilsSignatureWithSaltAndExpiry is an auto generated low-level Go binding around an user-defined struct.
-type ISignatureUtilsSignatureWithSaltAndExpiry struct {
+// IRegistryCoordinatorTypesRegistryCoordinatorParams is an auto generated low-level Go binding around an user-defined struct.
+type IRegistryCoordinatorTypesRegistryCoordinatorParams struct {
+	ServiceManager common.Address
+	SlashingParams IRegistryCoordinatorTypesSlashingRegistryParams
+}
+
+// IRegistryCoordinatorTypesSlashingRegistryParams is an auto generated low-level Go binding around an user-defined struct.
+type IRegistryCoordinatorTypesSlashingRegistryParams struct {
+	StakeRegistry     common.Address
+	BlsApkRegistry    common.Address
+	IndexRegistry     common.Address
+	SocketRegistry    common.Address
+	AllocationManager common.Address
+	PauserRegistry    common.Address
+}
+
+// ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry is an auto generated low-level Go binding around an user-defined struct.
+type ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry struct {
 	Signature []byte
 	Salt      [32]byte
 	Expiry    *big.Int
@@ -90,7 +105,7 @@ type IStakeRegistryTypesStrategyParams struct {
 
 // EORegistryCoordinatorMetaData contains all meta data concerning the EORegistryCoordinator contract.
 var EORegistryCoordinatorMetaData = &bind.MetaData{
-	ABI: "[{\"type\":\"constructor\",\"inputs\":[{\"name\":\"_serviceManager\",\"type\":\"address\",\"internalType\":\"contractIServiceManager\"},{\"name\":\"_stakeRegistry\",\"type\":\"address\",\"internalType\":\"contractIEOStakeRegistry\"},{\"name\":\"_blsApkRegistry\",\"type\":\"address\",\"internalType\":\"contractIEOBLSApkRegistry\"},{\"name\":\"_indexRegistry\",\"type\":\"address\",\"internalType\":\"contractIEOIndexRegistry\"},{\"name\":\"_socketRegistry\",\"type\":\"address\",\"internalType\":\"contractISocketRegistry\"},{\"name\":\"_allocationManager\",\"type\":\"address\",\"internalType\":\"contractIAllocationManager\"},{\"name\":\"_pauserRegistry\",\"type\":\"address\",\"internalType\":\"contractIPauserRegistry\"}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"OPERATOR_CHURN_APPROVAL_TYPEHASH\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"PUBKEY_REGISTRATION_TYPEHASH\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"accountIdentifier\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"allocationManager\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIAllocationManager\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"blsApkRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIEOBLSApkRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"calculateOperatorChurnApprovalDigestHash\",\"inputs\":[{\"name\":\"registeringOperator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"registeringOperatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"operatorKickParams\",\"type\":\"tuple[]\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorKickParam[]\",\"components\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"},{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}]},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"chainManager\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIEOChainManager\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"churnApprover\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"createSlashableStakeQuorum\",\"inputs\":[{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]},{\"name\":\"minimumStake\",\"type\":\"uint96\",\"internalType\":\"uint96\"},{\"name\":\"strategyParams\",\"type\":\"tuple[]\",\"internalType\":\"structIStakeRegistryTypes.StrategyParams[]\",\"components\":[{\"name\":\"strategy\",\"type\":\"address\",\"internalType\":\"contractIStrategy\"},{\"name\":\"multiplier\",\"type\":\"uint96\",\"internalType\":\"uint96\"}]},{\"name\":\"lookAheadPeriod\",\"type\":\"uint32\",\"internalType\":\"uint32\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"createTotalDelegatedStakeQuorum\",\"inputs\":[{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]},{\"name\":\"minimumStake\",\"type\":\"uint96\",\"internalType\":\"uint96\"},{\"name\":\"strategyParams\",\"type\":\"tuple[]\",\"internalType\":\"structIStakeRegistryTypes.StrategyParams[]\",\"components\":[{\"name\":\"strategy\",\"type\":\"address\",\"internalType\":\"contractIStrategy\"},{\"name\":\"multiplier\",\"type\":\"uint96\",\"internalType\":\"uint96\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"deregisterOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"operatorSetIds\",\"type\":\"uint32[]\",\"internalType\":\"uint32[]\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"deregisterOperator\",\"inputs\":[{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"disableM2QuorumRegistration\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"ejectOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"ejectionCooldown\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"ejector\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"enableOperatorSets\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"getCurrentQuorumBitmap\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint192\",\"internalType\":\"uint192\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorInfo\",\"components\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"status\",\"type\":\"uint8\",\"internalType\":\"enumISlashingRegistryCoordinatorTypes.OperatorStatus\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorFromId\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorId\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorSetParams\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorStatus\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint8\",\"internalType\":\"enumISlashingRegistryCoordinatorTypes.OperatorStatus\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapAtBlockNumberByIndex\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"blockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"index\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint192\",\"internalType\":\"uint192\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapHistoryLength\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapIndicesAtBlockNumber\",\"inputs\":[{\"name\":\"blockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"operatorIds\",\"type\":\"bytes32[]\",\"internalType\":\"bytes32[]\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint32[]\",\"internalType\":\"uint32[]\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapUpdateByIndex\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"index\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.QuorumBitmapUpdate\",\"components\":[{\"name\":\"updateBlockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"nextUpdateBlockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"quorumBitmap\",\"type\":\"uint192\",\"internalType\":\"uint192\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"indexRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIEOIndexRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"initialize\",\"inputs\":[{\"name\":\"_initialOwner\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"_churnApprover\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"_ejector\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"_initialPausedStatus\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"_accountIdentifier\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"isChurnApproverSaltUsed\",\"inputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"isM2Quorum\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"lastEjectionTimestamp\",\"inputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"m2QuorumsDisabled\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"numRegistries\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"operatorSetsEnabled\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"owner\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"pause\",\"inputs\":[{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"pauseAll\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"paused\",\"inputs\":[{\"name\":\"index\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"paused\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"pauserRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIPauserRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"pubkeyRegistrationMessageHash\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"quorumCount\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"quorumUpdateBlockNumber\",\"inputs\":[{\"name\":\"\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"registerOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"operatorSetIds\",\"type\":\"uint32[]\",\"internalType\":\"uint32[]\"},{\"name\":\"data\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"registerOperator\",\"inputs\":[{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"socket\",\"type\":\"string\",\"internalType\":\"string\"},{\"name\":\"params\",\"type\":\"tuple\",\"internalType\":\"structIBLSApkRegistryTypes.PubkeyRegistrationParams\",\"components\":[{\"name\":\"pubkeyRegistrationSignature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"chainValidatorSignature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG1\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG2\",\"type\":\"tuple\",\"internalType\":\"structBN254.G2Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"},{\"name\":\"Y\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"}]}]},{\"name\":\"operatorSignature\",\"type\":\"tuple\",\"internalType\":\"structISignatureUtils.SignatureWithSaltAndExpiry\",\"components\":[{\"name\":\"signature\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"registerOperatorWithChurn\",\"inputs\":[{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"socket\",\"type\":\"string\",\"internalType\":\"string\"},{\"name\":\"params\",\"type\":\"tuple\",\"internalType\":\"structIBLSApkRegistryTypes.PubkeyRegistrationParams\",\"components\":[{\"name\":\"pubkeyRegistrationSignature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"chainValidatorSignature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG1\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG2\",\"type\":\"tuple\",\"internalType\":\"structBN254.G2Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"},{\"name\":\"Y\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"}]}]},{\"name\":\"operatorKickParams\",\"type\":\"tuple[]\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorKickParam[]\",\"components\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"},{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}]},{\"name\":\"churnApproverSignature\",\"type\":\"tuple\",\"internalType\":\"structISignatureUtils.SignatureWithSaltAndExpiry\",\"components\":[{\"name\":\"signature\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"operatorSignature\",\"type\":\"tuple\",\"internalType\":\"structISignatureUtils.SignatureWithSaltAndExpiry\",\"components\":[{\"name\":\"signature\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"registries\",\"inputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"renounceOwnership\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"serviceManager\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIServiceManager\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"setAccountIdentifier\",\"inputs\":[{\"name\":\"_accountIdentifier\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setChainManager\",\"inputs\":[{\"name\":\"newChainManager\",\"type\":\"address\",\"internalType\":\"contractIEOChainManager\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setChurnApprover\",\"inputs\":[{\"name\":\"_churnApprover\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setEjectionCooldown\",\"inputs\":[{\"name\":\"_ejectionCooldown\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setEjector\",\"inputs\":[{\"name\":\"_ejector\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setOperatorSetParams\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"},{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"socketRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractISocketRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"stakeRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIEOStakeRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"transferOwnership\",\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"unpause\",\"inputs\":[{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"updateOperators\",\"inputs\":[{\"name\":\"operators\",\"type\":\"address[]\",\"internalType\":\"address[]\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"updateOperatorsForQuorum\",\"inputs\":[{\"name\":\"operatorsPerQuorum\",\"type\":\"address[][]\",\"internalType\":\"address[][]\"},{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"updateSocket\",\"inputs\":[{\"name\":\"socket\",\"type\":\"string\",\"internalType\":\"string\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"event\",\"name\":\"ChainManagerUpdated\",\"inputs\":[{\"name\":\"prevChainManager\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newChainManager\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"ChurnApproverUpdated\",\"inputs\":[{\"name\":\"prevChurnApprover\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newChurnApprover\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"EjectorUpdated\",\"inputs\":[{\"name\":\"prevEjector\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newEjector\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"Initialized\",\"inputs\":[{\"name\":\"version\",\"type\":\"uint8\",\"indexed\":false,\"internalType\":\"uint8\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"M2QuorumsDisabled\",\"inputs\":[],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorDeregistered\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"operatorId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorRegistered\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"operatorId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorSetParamsUpdated\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"indexed\":true,\"internalType\":\"uint8\"},{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"indexed\":false,\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorSetsEnabled\",\"inputs\":[],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorSocketUpdate\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"},{\"name\":\"socket\",\"type\":\"string\",\"indexed\":false,\"internalType\":\"string\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OwnershipTransferred\",\"inputs\":[{\"name\":\"previousOwner\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"newOwner\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"Paused\",\"inputs\":[{\"name\":\"account\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"QuorumBlockNumberUpdated\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"indexed\":true,\"internalType\":\"uint8\"},{\"name\":\"blocknumber\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"Unpaused\",\"inputs\":[{\"name\":\"account\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"error\",\"name\":\"AlreadyRegisteredForQuorums\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapCannotBeZero\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapEmpty\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapUpdateIsAfterBlockNumber\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapValueTooLarge\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BytesArrayLengthTooLong\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BytesArrayNotOrdered\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CannotChurnSelf\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CannotKickOperatorAboveThreshold\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CannotReregisterYet\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"ChurnApproverSaltUsed\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CurrentlyPaused\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"ExpModFailed\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InputAddressZero\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InputLengthMismatch\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InsufficientStakeForChurn\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidNewPausedStatus\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidRegistrationType\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidSignature\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidSignature\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"M2QuorumsAlreadyDisabled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"MaxQuorumsReached\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NextBitmapUpdateIsBeforeBlockNumber\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NotRegistered\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NotRegisteredForQuorum\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NotSorted\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyAllocationManager\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyEjector\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyPauser\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyUnpauser\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorSetQuorum\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorSetsAlreadyEnabled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorSetsNotEnabled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"QuorumDoesNotExist\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"QuorumOperatorCountMismatch\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"SignatureExpired\",\"inputs\":[]}]",
+	ABI: "[{\"type\":\"constructor\",\"inputs\":[{\"name\":\"params\",\"type\":\"tuple\",\"internalType\":\"structIRegistryCoordinatorTypes.RegistryCoordinatorParams\",\"components\":[{\"name\":\"serviceManager\",\"type\":\"address\",\"internalType\":\"contractIServiceManager\"},{\"name\":\"slashingParams\",\"type\":\"tuple\",\"internalType\":\"structIRegistryCoordinatorTypes.SlashingRegistryParams\",\"components\":[{\"name\":\"stakeRegistry\",\"type\":\"address\",\"internalType\":\"contractIStakeRegistry\"},{\"name\":\"blsApkRegistry\",\"type\":\"address\",\"internalType\":\"contractIBLSApkRegistry\"},{\"name\":\"indexRegistry\",\"type\":\"address\",\"internalType\":\"contractIIndexRegistry\"},{\"name\":\"socketRegistry\",\"type\":\"address\",\"internalType\":\"contractISocketRegistry\"},{\"name\":\"allocationManager\",\"type\":\"address\",\"internalType\":\"contractIAllocationManager\"},{\"name\":\"pauserRegistry\",\"type\":\"address\",\"internalType\":\"contractIPauserRegistry\"}]}]}],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"OPERATOR_CHURN_APPROVAL_TYPEHASH\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"PUBKEY_REGISTRATION_TYPEHASH\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"allocationManager\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIAllocationManager\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"avs\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"blsApkRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIBLSApkRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"calculateOperatorChurnApprovalDigestHash\",\"inputs\":[{\"name\":\"registeringOperator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"registeringOperatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"operatorKickParams\",\"type\":\"tuple[]\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorKickParam[]\",\"components\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"},{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}]},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"calculatePubkeyRegistrationMessageHash\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"chainManager\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIEOChainManager\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"churnApprover\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"createSlashableStakeQuorum\",\"inputs\":[{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]},{\"name\":\"minimumStake\",\"type\":\"uint96\",\"internalType\":\"uint96\"},{\"name\":\"strategyParams\",\"type\":\"tuple[]\",\"internalType\":\"structIStakeRegistryTypes.StrategyParams[]\",\"components\":[{\"name\":\"strategy\",\"type\":\"address\",\"internalType\":\"contractIStrategy\"},{\"name\":\"multiplier\",\"type\":\"uint96\",\"internalType\":\"uint96\"}]},{\"name\":\"lookAheadPeriod\",\"type\":\"uint32\",\"internalType\":\"uint32\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"createTotalDelegatedStakeQuorum\",\"inputs\":[{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]},{\"name\":\"minimumStake\",\"type\":\"uint96\",\"internalType\":\"uint96\"},{\"name\":\"strategyParams\",\"type\":\"tuple[]\",\"internalType\":\"structIStakeRegistryTypes.StrategyParams[]\",\"components\":[{\"name\":\"strategy\",\"type\":\"address\",\"internalType\":\"contractIStrategy\"},{\"name\":\"multiplier\",\"type\":\"uint96\",\"internalType\":\"uint96\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"deregisterOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"operatorSetIds\",\"type\":\"uint32[]\",\"internalType\":\"uint32[]\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"deregisterOperator\",\"inputs\":[{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"disableM2QuorumRegistration\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"domainSeparator\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"eip712Domain\",\"inputs\":[],\"outputs\":[{\"name\":\"fields\",\"type\":\"bytes1\",\"internalType\":\"bytes1\"},{\"name\":\"name\",\"type\":\"string\",\"internalType\":\"string\"},{\"name\":\"version\",\"type\":\"string\",\"internalType\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"extensions\",\"type\":\"uint256[]\",\"internalType\":\"uint256[]\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"ejectOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"ejectionCooldown\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"ejector\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getCurrentQuorumBitmap\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint192\",\"internalType\":\"uint192\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorInfo\",\"components\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"status\",\"type\":\"uint8\",\"internalType\":\"enumISlashingRegistryCoordinatorTypes.OperatorStatus\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorFromId\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorId\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorSetParams\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getOperatorStatus\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint8\",\"internalType\":\"enumISlashingRegistryCoordinatorTypes.OperatorStatus\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapAtBlockNumberByIndex\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"blockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"index\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint192\",\"internalType\":\"uint192\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapHistoryLength\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapIndicesAtBlockNumber\",\"inputs\":[{\"name\":\"blockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"operatorIds\",\"type\":\"bytes32[]\",\"internalType\":\"bytes32[]\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint32[]\",\"internalType\":\"uint32[]\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"getQuorumBitmapUpdateByIndex\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"index\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.QuorumBitmapUpdate\",\"components\":[{\"name\":\"updateBlockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"nextUpdateBlockNumber\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"quorumBitmap\",\"type\":\"uint192\",\"internalType\":\"uint192\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"indexRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIIndexRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"initialize\",\"inputs\":[{\"name\":\"initialOwner\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"churnApprover\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"ejector\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"initialPausedStatus\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"isChurnApproverSaltUsed\",\"inputs\":[{\"name\":\"\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"isM2Quorum\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"isM2QuorumRegistrationDisabled\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"lastEjectionTimestamp\",\"inputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"m2QuorumBitmap\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"operatorSetsEnabled\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"owner\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"address\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"pause\",\"inputs\":[{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"pauseAll\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"paused\",\"inputs\":[{\"name\":\"index\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"paused\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"pauserRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIPauserRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"pubkeyRegistrationMessageHash\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"quorumCount\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"quorumUpdateBlockNumber\",\"inputs\":[{\"name\":\"\",\"type\":\"uint8\",\"internalType\":\"uint8\"}],\"outputs\":[{\"name\":\"\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"registerOperator\",\"inputs\":[{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"socket\",\"type\":\"string\",\"internalType\":\"string\"},{\"name\":\"params\",\"type\":\"tuple\",\"internalType\":\"structIBLSApkRegistryTypes.PubkeyRegistrationParams\",\"components\":[{\"name\":\"pubkeyRegistrationSignature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG1\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG2\",\"type\":\"tuple\",\"internalType\":\"structBN254.G2Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"},{\"name\":\"Y\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"}]}]},{\"name\":\"operatorSignature\",\"type\":\"tuple\",\"internalType\":\"structISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry\",\"components\":[{\"name\":\"signature\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"registerOperator\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"avs\",\"type\":\"address\",\"internalType\":\"address\"},{\"name\":\"operatorSetIds\",\"type\":\"uint32[]\",\"internalType\":\"uint32[]\"},{\"name\":\"data\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"registerOperatorWithChurn\",\"inputs\":[{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"socket\",\"type\":\"string\",\"internalType\":\"string\"},{\"name\":\"params\",\"type\":\"tuple\",\"internalType\":\"structIBLSApkRegistryTypes.PubkeyRegistrationParams\",\"components\":[{\"name\":\"pubkeyRegistrationSignature\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG1\",\"type\":\"tuple\",\"internalType\":\"structBN254.G1Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256\",\"internalType\":\"uint256\"},{\"name\":\"Y\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"pubkeyG2\",\"type\":\"tuple\",\"internalType\":\"structBN254.G2Point\",\"components\":[{\"name\":\"X\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"},{\"name\":\"Y\",\"type\":\"uint256[2]\",\"internalType\":\"uint256[2]\"}]}]},{\"name\":\"operatorKickParams\",\"type\":\"tuple[]\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorKickParam[]\",\"components\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"},{\"name\":\"operator\",\"type\":\"address\",\"internalType\":\"address\"}]},{\"name\":\"churnApproverSignature\",\"type\":\"tuple\",\"internalType\":\"structISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry\",\"components\":[{\"name\":\"signature\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]},{\"name\":\"operatorSignature\",\"type\":\"tuple\",\"internalType\":\"structISignatureUtilsMixinTypes.SignatureWithSaltAndExpiry\",\"components\":[{\"name\":\"signature\",\"type\":\"bytes\",\"internalType\":\"bytes\"},{\"name\":\"salt\",\"type\":\"bytes32\",\"internalType\":\"bytes32\"},{\"name\":\"expiry\",\"type\":\"uint256\",\"internalType\":\"uint256\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"renounceOwnership\",\"inputs\":[],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"serviceManager\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIServiceManager\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"setAVS\",\"inputs\":[{\"name\":\"_avs\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setChainManager\",\"inputs\":[{\"name\":\"newChainManager\",\"type\":\"address\",\"internalType\":\"contractIEOChainManager\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setChurnApprover\",\"inputs\":[{\"name\":\"_churnApprover\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setEjectionCooldown\",\"inputs\":[{\"name\":\"_ejectionCooldown\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setEjector\",\"inputs\":[{\"name\":\"_ejector\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"setOperatorSetParams\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"internalType\":\"uint8\"},{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"socketRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractISocketRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"stakeRegistry\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"address\",\"internalType\":\"contractIStakeRegistry\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"supportsAVS\",\"inputs\":[{\"name\":\"_avs\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[{\"name\":\"\",\"type\":\"bool\",\"internalType\":\"bool\"}],\"stateMutability\":\"view\"},{\"type\":\"function\",\"name\":\"transferOwnership\",\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\",\"internalType\":\"address\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"unpause\",\"inputs\":[{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"internalType\":\"uint256\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"updateOperators\",\"inputs\":[{\"name\":\"operators\",\"type\":\"address[]\",\"internalType\":\"address[]\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"updateOperatorsForQuorum\",\"inputs\":[{\"name\":\"operatorsPerQuorum\",\"type\":\"address[][]\",\"internalType\":\"address[][]\"},{\"name\":\"quorumNumbers\",\"type\":\"bytes\",\"internalType\":\"bytes\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"updateSocket\",\"inputs\":[{\"name\":\"socket\",\"type\":\"string\",\"internalType\":\"string\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"},{\"type\":\"function\",\"name\":\"version\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"string\",\"internalType\":\"string\"}],\"stateMutability\":\"view\"},{\"type\":\"event\",\"name\":\"AVSUpdated\",\"inputs\":[{\"name\":\"prevAVS\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newAVS\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"ChainManagerUpdated\",\"inputs\":[{\"name\":\"prevChainManager\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newChainManager\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"ChurnApproverUpdated\",\"inputs\":[{\"name\":\"prevChurnApprover\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newChurnApprover\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"EIP712DomainChanged\",\"inputs\":[],\"anonymous\":false},{\"type\":\"event\",\"name\":\"EjectionCooldownUpdated\",\"inputs\":[{\"name\":\"prevEjectionCooldown\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"},{\"name\":\"newEjectionCooldown\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"EjectorUpdated\",\"inputs\":[{\"name\":\"prevEjector\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"},{\"name\":\"newEjector\",\"type\":\"address\",\"indexed\":false,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"Initialized\",\"inputs\":[{\"name\":\"version\",\"type\":\"uint8\",\"indexed\":false,\"internalType\":\"uint8\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"M2QuorumRegistrationDisabled\",\"inputs\":[],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorDeregistered\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"operatorId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorRegistered\",\"inputs\":[{\"name\":\"operator\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"operatorId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorSetParamsUpdated\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"indexed\":true,\"internalType\":\"uint8\"},{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"indexed\":false,\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorSetsEnabled\",\"inputs\":[],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OperatorSocketUpdate\",\"inputs\":[{\"name\":\"operatorId\",\"type\":\"bytes32\",\"indexed\":true,\"internalType\":\"bytes32\"},{\"name\":\"socket\",\"type\":\"string\",\"indexed\":false,\"internalType\":\"string\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"OwnershipTransferred\",\"inputs\":[{\"name\":\"previousOwner\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"newOwner\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"Paused\",\"inputs\":[{\"name\":\"account\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"QuorumBlockNumberUpdated\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"indexed\":true,\"internalType\":\"uint8\"},{\"name\":\"blocknumber\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"QuorumCreated\",\"inputs\":[{\"name\":\"quorumNumber\",\"type\":\"uint8\",\"indexed\":true,\"internalType\":\"uint8\"},{\"name\":\"operatorSetParams\",\"type\":\"tuple\",\"indexed\":false,\"internalType\":\"structISlashingRegistryCoordinatorTypes.OperatorSetParam\",\"components\":[{\"name\":\"maxOperatorCount\",\"type\":\"uint32\",\"internalType\":\"uint32\"},{\"name\":\"kickBIPsOfOperatorStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"},{\"name\":\"kickBIPsOfTotalStake\",\"type\":\"uint16\",\"internalType\":\"uint16\"}]},{\"name\":\"minimumStake\",\"type\":\"uint96\",\"indexed\":false,\"internalType\":\"uint96\"},{\"name\":\"strategyParams\",\"type\":\"tuple[]\",\"indexed\":false,\"internalType\":\"structIStakeRegistryTypes.StrategyParams[]\",\"components\":[{\"name\":\"strategy\",\"type\":\"address\",\"internalType\":\"contractIStrategy\"},{\"name\":\"multiplier\",\"type\":\"uint96\",\"internalType\":\"uint96\"}]},{\"name\":\"stakeType\",\"type\":\"uint8\",\"indexed\":false,\"internalType\":\"enumIStakeRegistryTypes.StakeType\"},{\"name\":\"lookAheadPeriod\",\"type\":\"uint32\",\"indexed\":false,\"internalType\":\"uint32\"}],\"anonymous\":false},{\"type\":\"event\",\"name\":\"Unpaused\",\"inputs\":[{\"name\":\"account\",\"type\":\"address\",\"indexed\":true,\"internalType\":\"address\"},{\"name\":\"newPausedStatus\",\"type\":\"uint256\",\"indexed\":false,\"internalType\":\"uint256\"}],\"anonymous\":false},{\"type\":\"error\",\"name\":\"AlreadyRegisteredForQuorums\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapCannotBeZero\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapEmpty\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BitmapValueTooLarge\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BytesArrayLengthTooLong\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"BytesArrayNotOrdered\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CannotChurnSelf\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CannotKickOperatorAboveThreshold\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CannotReregisterYet\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"ChurnApproverSaltUsed\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"CurrentlyPaused\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"ExpModFailed\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InputAddressZero\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InputLengthMismatch\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InsufficientStakeForChurn\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidAVS\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidNewPausedStatus\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidRegistrationType\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"InvalidSignature\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"LookAheadPeriodTooLong\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"M2QuorumRegistrationIsDisabled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"MaxOperatorCountReached\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"MaxQuorumsReached\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NotRegistered\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NotRegisteredForQuorum\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"NotSorted\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyAllocationManager\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyEjector\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyM2QuorumsAllowed\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyPauser\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OnlyUnpauser\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorNotRegistered\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorNotRegisteredForQuorum\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorSetQuorum\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorSetsAlreadyEnabled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"OperatorSetsNotEnabled\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"QuorumDoesNotExist\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"QuorumOperatorCountMismatch\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"SignatureExpired\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"StringTooLong\",\"inputs\":[{\"name\":\"str\",\"type\":\"string\",\"internalType\":\"string\"}]}]",
 }
 
 // EORegistryCoordinatorABI is the input ABI used to generate the binding from.
@@ -301,37 +316,6 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) PUBKEYREGISTRA
 	return _EORegistryCoordinator.Contract.PUBKEYREGISTRATIONTYPEHASH(&_EORegistryCoordinator.CallOpts)
 }
 
-// AccountIdentifier is a free data retrieval call binding the contract method 0x0764cb93.
-//
-// Solidity: function accountIdentifier() view returns(address)
-func (_EORegistryCoordinator *EORegistryCoordinatorCaller) AccountIdentifier(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _EORegistryCoordinator.contract.Call(opts, &out, "accountIdentifier")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// AccountIdentifier is a free data retrieval call binding the contract method 0x0764cb93.
-//
-// Solidity: function accountIdentifier() view returns(address)
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) AccountIdentifier() (common.Address, error) {
-	return _EORegistryCoordinator.Contract.AccountIdentifier(&_EORegistryCoordinator.CallOpts)
-}
-
-// AccountIdentifier is a free data retrieval call binding the contract method 0x0764cb93.
-//
-// Solidity: function accountIdentifier() view returns(address)
-func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) AccountIdentifier() (common.Address, error) {
-	return _EORegistryCoordinator.Contract.AccountIdentifier(&_EORegistryCoordinator.CallOpts)
-}
-
 // AllocationManager is a free data retrieval call binding the contract method 0xca8aa7c7.
 //
 // Solidity: function allocationManager() view returns(address)
@@ -361,6 +345,37 @@ func (_EORegistryCoordinator *EORegistryCoordinatorSession) AllocationManager() 
 // Solidity: function allocationManager() view returns(address)
 func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) AllocationManager() (common.Address, error) {
 	return _EORegistryCoordinator.Contract.AllocationManager(&_EORegistryCoordinator.CallOpts)
+}
+
+// Avs is a free data retrieval call binding the contract method 0xde1164bb.
+//
+// Solidity: function avs() view returns(address)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) Avs(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "avs")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Avs is a free data retrieval call binding the contract method 0xde1164bb.
+//
+// Solidity: function avs() view returns(address)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) Avs() (common.Address, error) {
+	return _EORegistryCoordinator.Contract.Avs(&_EORegistryCoordinator.CallOpts)
+}
+
+// Avs is a free data retrieval call binding the contract method 0xde1164bb.
+//
+// Solidity: function avs() view returns(address)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) Avs() (common.Address, error) {
+	return _EORegistryCoordinator.Contract.Avs(&_EORegistryCoordinator.CallOpts)
 }
 
 // BlsApkRegistry is a free data retrieval call binding the contract method 0x5df45946.
@@ -425,6 +440,37 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) CalculateOpera
 	return _EORegistryCoordinator.Contract.CalculateOperatorChurnApprovalDigestHash(&_EORegistryCoordinator.CallOpts, registeringOperator, registeringOperatorId, operatorKickParams, salt, expiry)
 }
 
+// CalculatePubkeyRegistrationMessageHash is a free data retrieval call binding the contract method 0x73447992.
+//
+// Solidity: function calculatePubkeyRegistrationMessageHash(address operator) view returns(bytes32)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) CalculatePubkeyRegistrationMessageHash(opts *bind.CallOpts, operator common.Address) ([32]byte, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "calculatePubkeyRegistrationMessageHash", operator)
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// CalculatePubkeyRegistrationMessageHash is a free data retrieval call binding the contract method 0x73447992.
+//
+// Solidity: function calculatePubkeyRegistrationMessageHash(address operator) view returns(bytes32)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) CalculatePubkeyRegistrationMessageHash(operator common.Address) ([32]byte, error) {
+	return _EORegistryCoordinator.Contract.CalculatePubkeyRegistrationMessageHash(&_EORegistryCoordinator.CallOpts, operator)
+}
+
+// CalculatePubkeyRegistrationMessageHash is a free data retrieval call binding the contract method 0x73447992.
+//
+// Solidity: function calculatePubkeyRegistrationMessageHash(address operator) view returns(bytes32)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) CalculatePubkeyRegistrationMessageHash(operator common.Address) ([32]byte, error) {
+	return _EORegistryCoordinator.Contract.CalculatePubkeyRegistrationMessageHash(&_EORegistryCoordinator.CallOpts, operator)
+}
+
 // ChainManager is a free data retrieval call binding the contract method 0x5d824812.
 //
 // Solidity: function chainManager() view returns(address)
@@ -485,6 +531,107 @@ func (_EORegistryCoordinator *EORegistryCoordinatorSession) ChurnApprover() (com
 // Solidity: function churnApprover() view returns(address)
 func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) ChurnApprover() (common.Address, error) {
 	return _EORegistryCoordinator.Contract.ChurnApprover(&_EORegistryCoordinator.CallOpts)
+}
+
+// DomainSeparator is a free data retrieval call binding the contract method 0xf698da25.
+//
+// Solidity: function domainSeparator() view returns(bytes32)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) DomainSeparator(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "domainSeparator")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// DomainSeparator is a free data retrieval call binding the contract method 0xf698da25.
+//
+// Solidity: function domainSeparator() view returns(bytes32)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) DomainSeparator() ([32]byte, error) {
+	return _EORegistryCoordinator.Contract.DomainSeparator(&_EORegistryCoordinator.CallOpts)
+}
+
+// DomainSeparator is a free data retrieval call binding the contract method 0xf698da25.
+//
+// Solidity: function domainSeparator() view returns(bytes32)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) DomainSeparator() ([32]byte, error) {
+	return _EORegistryCoordinator.Contract.DomainSeparator(&_EORegistryCoordinator.CallOpts)
+}
+
+// Eip712Domain is a free data retrieval call binding the contract method 0x84b0196e.
+//
+// Solidity: function eip712Domain() view returns(bytes1 fields, string name, string version, uint256 chainId, address verifyingContract, bytes32 salt, uint256[] extensions)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) Eip712Domain(opts *bind.CallOpts) (struct {
+	Fields            [1]byte
+	Name              string
+	Version           string
+	ChainId           *big.Int
+	VerifyingContract common.Address
+	Salt              [32]byte
+	Extensions        []*big.Int
+}, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "eip712Domain")
+
+	outstruct := new(struct {
+		Fields            [1]byte
+		Name              string
+		Version           string
+		ChainId           *big.Int
+		VerifyingContract common.Address
+		Salt              [32]byte
+		Extensions        []*big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.Fields = *abi.ConvertType(out[0], new([1]byte)).(*[1]byte)
+	outstruct.Name = *abi.ConvertType(out[1], new(string)).(*string)
+	outstruct.Version = *abi.ConvertType(out[2], new(string)).(*string)
+	outstruct.ChainId = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
+	outstruct.VerifyingContract = *abi.ConvertType(out[4], new(common.Address)).(*common.Address)
+	outstruct.Salt = *abi.ConvertType(out[5], new([32]byte)).(*[32]byte)
+	outstruct.Extensions = *abi.ConvertType(out[6], new([]*big.Int)).(*[]*big.Int)
+
+	return *outstruct, err
+
+}
+
+// Eip712Domain is a free data retrieval call binding the contract method 0x84b0196e.
+//
+// Solidity: function eip712Domain() view returns(bytes1 fields, string name, string version, uint256 chainId, address verifyingContract, bytes32 salt, uint256[] extensions)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) Eip712Domain() (struct {
+	Fields            [1]byte
+	Name              string
+	Version           string
+	ChainId           *big.Int
+	VerifyingContract common.Address
+	Salt              [32]byte
+	Extensions        []*big.Int
+}, error) {
+	return _EORegistryCoordinator.Contract.Eip712Domain(&_EORegistryCoordinator.CallOpts)
+}
+
+// Eip712Domain is a free data retrieval call binding the contract method 0x84b0196e.
+//
+// Solidity: function eip712Domain() view returns(bytes1 fields, string name, string version, uint256 chainId, address verifyingContract, bytes32 salt, uint256[] extensions)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) Eip712Domain() (struct {
+	Fields            [1]byte
+	Name              string
+	Version           string
+	ChainId           *big.Int
+	VerifyingContract common.Address
+	Salt              [32]byte
+	Extensions        []*big.Int
+}, error) {
+	return _EORegistryCoordinator.Contract.Eip712Domain(&_EORegistryCoordinator.CallOpts)
 }
 
 // EjectionCooldown is a free data retrieval call binding the contract method 0xa96f783e.
@@ -952,6 +1099,37 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) IsM2Quorum(quo
 	return _EORegistryCoordinator.Contract.IsM2Quorum(&_EORegistryCoordinator.CallOpts, quorumNumber)
 }
 
+// IsM2QuorumRegistrationDisabled is a free data retrieval call binding the contract method 0xe814ca9d.
+//
+// Solidity: function isM2QuorumRegistrationDisabled() view returns(bool)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) IsM2QuorumRegistrationDisabled(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "isM2QuorumRegistrationDisabled")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsM2QuorumRegistrationDisabled is a free data retrieval call binding the contract method 0xe814ca9d.
+//
+// Solidity: function isM2QuorumRegistrationDisabled() view returns(bool)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) IsM2QuorumRegistrationDisabled() (bool, error) {
+	return _EORegistryCoordinator.Contract.IsM2QuorumRegistrationDisabled(&_EORegistryCoordinator.CallOpts)
+}
+
+// IsM2QuorumRegistrationDisabled is a free data retrieval call binding the contract method 0xe814ca9d.
+//
+// Solidity: function isM2QuorumRegistrationDisabled() view returns(bool)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) IsM2QuorumRegistrationDisabled() (bool, error) {
+	return _EORegistryCoordinator.Contract.IsM2QuorumRegistrationDisabled(&_EORegistryCoordinator.CallOpts)
+}
+
 // LastEjectionTimestamp is a free data retrieval call binding the contract method 0x125e0584.
 //
 // Solidity: function lastEjectionTimestamp(address ) view returns(uint256)
@@ -983,43 +1161,12 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) LastEjectionTi
 	return _EORegistryCoordinator.Contract.LastEjectionTimestamp(&_EORegistryCoordinator.CallOpts, arg0)
 }
 
-// M2QuorumsDisabled is a free data retrieval call binding the contract method 0xb2d8678d.
+// M2QuorumBitmap is a free data retrieval call binding the contract method 0xec8c3a1e.
 //
-// Solidity: function m2QuorumsDisabled() view returns(bool)
-func (_EORegistryCoordinator *EORegistryCoordinatorCaller) M2QuorumsDisabled(opts *bind.CallOpts) (bool, error) {
+// Solidity: function m2QuorumBitmap() view returns(uint256)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) M2QuorumBitmap(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _EORegistryCoordinator.contract.Call(opts, &out, "m2QuorumsDisabled")
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// M2QuorumsDisabled is a free data retrieval call binding the contract method 0xb2d8678d.
-//
-// Solidity: function m2QuorumsDisabled() view returns(bool)
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) M2QuorumsDisabled() (bool, error) {
-	return _EORegistryCoordinator.Contract.M2QuorumsDisabled(&_EORegistryCoordinator.CallOpts)
-}
-
-// M2QuorumsDisabled is a free data retrieval call binding the contract method 0xb2d8678d.
-//
-// Solidity: function m2QuorumsDisabled() view returns(bool)
-func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) M2QuorumsDisabled() (bool, error) {
-	return _EORegistryCoordinator.Contract.M2QuorumsDisabled(&_EORegistryCoordinator.CallOpts)
-}
-
-// NumRegistries is a free data retrieval call binding the contract method 0xd72d8dd6.
-//
-// Solidity: function numRegistries() view returns(uint256)
-func (_EORegistryCoordinator *EORegistryCoordinatorCaller) NumRegistries(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _EORegistryCoordinator.contract.Call(opts, &out, "numRegistries")
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "m2QuorumBitmap")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -1031,18 +1178,18 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCaller) NumRegistries(opts *b
 
 }
 
-// NumRegistries is a free data retrieval call binding the contract method 0xd72d8dd6.
+// M2QuorumBitmap is a free data retrieval call binding the contract method 0xec8c3a1e.
 //
-// Solidity: function numRegistries() view returns(uint256)
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) NumRegistries() (*big.Int, error) {
-	return _EORegistryCoordinator.Contract.NumRegistries(&_EORegistryCoordinator.CallOpts)
+// Solidity: function m2QuorumBitmap() view returns(uint256)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) M2QuorumBitmap() (*big.Int, error) {
+	return _EORegistryCoordinator.Contract.M2QuorumBitmap(&_EORegistryCoordinator.CallOpts)
 }
 
-// NumRegistries is a free data retrieval call binding the contract method 0xd72d8dd6.
+// M2QuorumBitmap is a free data retrieval call binding the contract method 0xec8c3a1e.
 //
-// Solidity: function numRegistries() view returns(uint256)
-func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) NumRegistries() (*big.Int, error) {
-	return _EORegistryCoordinator.Contract.NumRegistries(&_EORegistryCoordinator.CallOpts)
+// Solidity: function m2QuorumBitmap() view returns(uint256)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) M2QuorumBitmap() (*big.Int, error) {
+	return _EORegistryCoordinator.Contract.M2QuorumBitmap(&_EORegistryCoordinator.CallOpts)
 }
 
 // OperatorSetsEnabled is a free data retrieval call binding the contract method 0x81f936d2.
@@ -1293,37 +1440,6 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) QuorumUpdateBl
 	return _EORegistryCoordinator.Contract.QuorumUpdateBlockNumber(&_EORegistryCoordinator.CallOpts, arg0)
 }
 
-// Registries is a free data retrieval call binding the contract method 0x6347c900.
-//
-// Solidity: function registries(uint256 ) view returns(address)
-func (_EORegistryCoordinator *EORegistryCoordinatorCaller) Registries(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
-	var out []interface{}
-	err := _EORegistryCoordinator.contract.Call(opts, &out, "registries", arg0)
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Registries is a free data retrieval call binding the contract method 0x6347c900.
-//
-// Solidity: function registries(uint256 ) view returns(address)
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) Registries(arg0 *big.Int) (common.Address, error) {
-	return _EORegistryCoordinator.Contract.Registries(&_EORegistryCoordinator.CallOpts, arg0)
-}
-
-// Registries is a free data retrieval call binding the contract method 0x6347c900.
-//
-// Solidity: function registries(uint256 ) view returns(address)
-func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) Registries(arg0 *big.Int) (common.Address, error) {
-	return _EORegistryCoordinator.Contract.Registries(&_EORegistryCoordinator.CallOpts, arg0)
-}
-
 // ServiceManager is a free data retrieval call binding the contract method 0x3998fdd3.
 //
 // Solidity: function serviceManager() view returns(address)
@@ -1417,6 +1533,68 @@ func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) StakeRegistry(
 	return _EORegistryCoordinator.Contract.StakeRegistry(&_EORegistryCoordinator.CallOpts)
 }
 
+// SupportsAVS is a free data retrieval call binding the contract method 0xb5265787.
+//
+// Solidity: function supportsAVS(address _avs) view returns(bool)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) SupportsAVS(opts *bind.CallOpts, _avs common.Address) (bool, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "supportsAVS", _avs)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// SupportsAVS is a free data retrieval call binding the contract method 0xb5265787.
+//
+// Solidity: function supportsAVS(address _avs) view returns(bool)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) SupportsAVS(_avs common.Address) (bool, error) {
+	return _EORegistryCoordinator.Contract.SupportsAVS(&_EORegistryCoordinator.CallOpts, _avs)
+}
+
+// SupportsAVS is a free data retrieval call binding the contract method 0xb5265787.
+//
+// Solidity: function supportsAVS(address _avs) view returns(bool)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) SupportsAVS(_avs common.Address) (bool, error) {
+	return _EORegistryCoordinator.Contract.SupportsAVS(&_EORegistryCoordinator.CallOpts, _avs)
+}
+
+// Version is a free data retrieval call binding the contract method 0x54fd4d50.
+//
+// Solidity: function version() view returns(string)
+func (_EORegistryCoordinator *EORegistryCoordinatorCaller) Version(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _EORegistryCoordinator.contract.Call(opts, &out, "version")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// Version is a free data retrieval call binding the contract method 0x54fd4d50.
+//
+// Solidity: function version() view returns(string)
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) Version() (string, error) {
+	return _EORegistryCoordinator.Contract.Version(&_EORegistryCoordinator.CallOpts)
+}
+
+// Version is a free data retrieval call binding the contract method 0x54fd4d50.
+//
+// Solidity: function version() view returns(string)
+func (_EORegistryCoordinator *EORegistryCoordinatorCallerSession) Version() (string, error) {
+	return _EORegistryCoordinator.Contract.Version(&_EORegistryCoordinator.CallOpts)
+}
+
 // CreateSlashableStakeQuorum is a paid mutator transaction binding the contract method 0x3eef3a51.
 //
 // Solidity: function createSlashableStakeQuorum((uint32,uint16,uint16) operatorSetParams, uint96 minimumStake, (address,uint96)[] strategyParams, uint32 lookAheadPeriod) returns()
@@ -1459,25 +1637,25 @@ func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) CreateTota
 	return _EORegistryCoordinator.Contract.CreateTotalDelegatedStakeQuorum(&_EORegistryCoordinator.TransactOpts, operatorSetParams, minimumStake, strategyParams)
 }
 
-// DeregisterOperator is a paid mutator transaction binding the contract method 0x9d8e0c23.
+// DeregisterOperator is a paid mutator transaction binding the contract method 0x303ca956.
 //
-// Solidity: function deregisterOperator(address operator, uint32[] operatorSetIds) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) DeregisterOperator(opts *bind.TransactOpts, operator common.Address, operatorSetIds []uint32) (*types.Transaction, error) {
-	return _EORegistryCoordinator.contract.Transact(opts, "deregisterOperator", operator, operatorSetIds)
+// Solidity: function deregisterOperator(address operator, address avs, uint32[] operatorSetIds) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) DeregisterOperator(opts *bind.TransactOpts, operator common.Address, avs common.Address, operatorSetIds []uint32) (*types.Transaction, error) {
+	return _EORegistryCoordinator.contract.Transact(opts, "deregisterOperator", operator, avs, operatorSetIds)
 }
 
-// DeregisterOperator is a paid mutator transaction binding the contract method 0x9d8e0c23.
+// DeregisterOperator is a paid mutator transaction binding the contract method 0x303ca956.
 //
-// Solidity: function deregisterOperator(address operator, uint32[] operatorSetIds) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) DeregisterOperator(operator common.Address, operatorSetIds []uint32) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.DeregisterOperator(&_EORegistryCoordinator.TransactOpts, operator, operatorSetIds)
+// Solidity: function deregisterOperator(address operator, address avs, uint32[] operatorSetIds) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) DeregisterOperator(operator common.Address, avs common.Address, operatorSetIds []uint32) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.DeregisterOperator(&_EORegistryCoordinator.TransactOpts, operator, avs, operatorSetIds)
 }
 
-// DeregisterOperator is a paid mutator transaction binding the contract method 0x9d8e0c23.
+// DeregisterOperator is a paid mutator transaction binding the contract method 0x303ca956.
 //
-// Solidity: function deregisterOperator(address operator, uint32[] operatorSetIds) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) DeregisterOperator(operator common.Address, operatorSetIds []uint32) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.DeregisterOperator(&_EORegistryCoordinator.TransactOpts, operator, operatorSetIds)
+// Solidity: function deregisterOperator(address operator, address avs, uint32[] operatorSetIds) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) DeregisterOperator(operator common.Address, avs common.Address, operatorSetIds []uint32) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.DeregisterOperator(&_EORegistryCoordinator.TransactOpts, operator, avs, operatorSetIds)
 }
 
 // DeregisterOperator0 is a paid mutator transaction binding the contract method 0xca4f2d97.
@@ -1543,46 +1721,25 @@ func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) EjectOpera
 	return _EORegistryCoordinator.Contract.EjectOperator(&_EORegistryCoordinator.TransactOpts, operator, quorumNumbers)
 }
 
-// EnableOperatorSets is a paid mutator transaction binding the contract method 0xee318821.
+// Initialize is a paid mutator transaction binding the contract method 0x530b97a4.
 //
-// Solidity: function enableOperatorSets() returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) EnableOperatorSets(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _EORegistryCoordinator.contract.Transact(opts, "enableOperatorSets")
-}
-
-// EnableOperatorSets is a paid mutator transaction binding the contract method 0xee318821.
-//
-// Solidity: function enableOperatorSets() returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) EnableOperatorSets() (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.EnableOperatorSets(&_EORegistryCoordinator.TransactOpts)
-}
-
-// EnableOperatorSets is a paid mutator transaction binding the contract method 0xee318821.
-//
-// Solidity: function enableOperatorSets() returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) EnableOperatorSets() (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.EnableOperatorSets(&_EORegistryCoordinator.TransactOpts)
+// Solidity: function initialize(address initialOwner, address churnApprover, address ejector, uint256 initialPausedStatus, address avs) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) Initialize(opts *bind.TransactOpts, initialOwner common.Address, churnApprover common.Address, ejector common.Address, initialPausedStatus *big.Int, avs common.Address) (*types.Transaction, error) {
+	return _EORegistryCoordinator.contract.Transact(opts, "initialize", initialOwner, churnApprover, ejector, initialPausedStatus, avs)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0x530b97a4.
 //
-// Solidity: function initialize(address _initialOwner, address _churnApprover, address _ejector, uint256 _initialPausedStatus, address _accountIdentifier) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) Initialize(opts *bind.TransactOpts, _initialOwner common.Address, _churnApprover common.Address, _ejector common.Address, _initialPausedStatus *big.Int, _accountIdentifier common.Address) (*types.Transaction, error) {
-	return _EORegistryCoordinator.contract.Transact(opts, "initialize", _initialOwner, _churnApprover, _ejector, _initialPausedStatus, _accountIdentifier)
+// Solidity: function initialize(address initialOwner, address churnApprover, address ejector, uint256 initialPausedStatus, address avs) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) Initialize(initialOwner common.Address, churnApprover common.Address, ejector common.Address, initialPausedStatus *big.Int, avs common.Address) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.Initialize(&_EORegistryCoordinator.TransactOpts, initialOwner, churnApprover, ejector, initialPausedStatus, avs)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0x530b97a4.
 //
-// Solidity: function initialize(address _initialOwner, address _churnApprover, address _ejector, uint256 _initialPausedStatus, address _accountIdentifier) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) Initialize(_initialOwner common.Address, _churnApprover common.Address, _ejector common.Address, _initialPausedStatus *big.Int, _accountIdentifier common.Address) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.Initialize(&_EORegistryCoordinator.TransactOpts, _initialOwner, _churnApprover, _ejector, _initialPausedStatus, _accountIdentifier)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0x530b97a4.
-//
-// Solidity: function initialize(address _initialOwner, address _churnApprover, address _ejector, uint256 _initialPausedStatus, address _accountIdentifier) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) Initialize(_initialOwner common.Address, _churnApprover common.Address, _ejector common.Address, _initialPausedStatus *big.Int, _accountIdentifier common.Address) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.Initialize(&_EORegistryCoordinator.TransactOpts, _initialOwner, _churnApprover, _ejector, _initialPausedStatus, _accountIdentifier)
+// Solidity: function initialize(address initialOwner, address churnApprover, address ejector, uint256 initialPausedStatus, address avs) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) Initialize(initialOwner common.Address, churnApprover common.Address, ejector common.Address, initialPausedStatus *big.Int, avs common.Address) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.Initialize(&_EORegistryCoordinator.TransactOpts, initialOwner, churnApprover, ejector, initialPausedStatus, avs)
 }
 
 // Pause is a paid mutator transaction binding the contract method 0x136439dd.
@@ -1627,66 +1784,66 @@ func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) PauseAll()
 	return _EORegistryCoordinator.Contract.PauseAll(&_EORegistryCoordinator.TransactOpts)
 }
 
-// RegisterOperator is a paid mutator transaction binding the contract method 0xadcf73f7.
+// RegisterOperator is a paid mutator transaction binding the contract method 0xa50857bf.
 //
-// Solidity: function registerOperator(address operator, uint32[] operatorSetIds, bytes data) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) RegisterOperator(opts *bind.TransactOpts, operator common.Address, operatorSetIds []uint32, data []byte) (*types.Transaction, error) {
-	return _EORegistryCoordinator.contract.Transact(opts, "registerOperator", operator, operatorSetIds, data)
+// Solidity: function registerOperator(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (bytes,bytes32,uint256) operatorSignature) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) RegisterOperator(opts *bind.TransactOpts, quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry) (*types.Transaction, error) {
+	return _EORegistryCoordinator.contract.Transact(opts, "registerOperator", quorumNumbers, socket, params, operatorSignature)
 }
 
-// RegisterOperator is a paid mutator transaction binding the contract method 0xadcf73f7.
+// RegisterOperator is a paid mutator transaction binding the contract method 0xa50857bf.
 //
-// Solidity: function registerOperator(address operator, uint32[] operatorSetIds, bytes data) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) RegisterOperator(operator common.Address, operatorSetIds []uint32, data []byte) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.RegisterOperator(&_EORegistryCoordinator.TransactOpts, operator, operatorSetIds, data)
+// Solidity: function registerOperator(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (bytes,bytes32,uint256) operatorSignature) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) RegisterOperator(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.RegisterOperator(&_EORegistryCoordinator.TransactOpts, quorumNumbers, socket, params, operatorSignature)
 }
 
-// RegisterOperator is a paid mutator transaction binding the contract method 0xadcf73f7.
+// RegisterOperator is a paid mutator transaction binding the contract method 0xa50857bf.
 //
-// Solidity: function registerOperator(address operator, uint32[] operatorSetIds, bytes data) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RegisterOperator(operator common.Address, operatorSetIds []uint32, data []byte) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.RegisterOperator(&_EORegistryCoordinator.TransactOpts, operator, operatorSetIds, data)
+// Solidity: function registerOperator(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (bytes,bytes32,uint256) operatorSignature) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RegisterOperator(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.RegisterOperator(&_EORegistryCoordinator.TransactOpts, quorumNumbers, socket, params, operatorSignature)
 }
 
-// RegisterOperator0 is a paid mutator transaction binding the contract method 0xf17c5168.
+// RegisterOperator0 is a paid mutator transaction binding the contract method 0xc63fd502.
 //
-// Solidity: function registerOperator(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (bytes,bytes32,uint256) operatorSignature) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) RegisterOperator0(opts *bind.TransactOpts, quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorSignature ISignatureUtilsSignatureWithSaltAndExpiry) (*types.Transaction, error) {
-	return _EORegistryCoordinator.contract.Transact(opts, "registerOperator0", quorumNumbers, socket, params, operatorSignature)
+// Solidity: function registerOperator(address operator, address avs, uint32[] operatorSetIds, bytes data) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) RegisterOperator0(opts *bind.TransactOpts, operator common.Address, avs common.Address, operatorSetIds []uint32, data []byte) (*types.Transaction, error) {
+	return _EORegistryCoordinator.contract.Transact(opts, "registerOperator0", operator, avs, operatorSetIds, data)
 }
 
-// RegisterOperator0 is a paid mutator transaction binding the contract method 0xf17c5168.
+// RegisterOperator0 is a paid mutator transaction binding the contract method 0xc63fd502.
 //
-// Solidity: function registerOperator(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (bytes,bytes32,uint256) operatorSignature) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) RegisterOperator0(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorSignature ISignatureUtilsSignatureWithSaltAndExpiry) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.RegisterOperator0(&_EORegistryCoordinator.TransactOpts, quorumNumbers, socket, params, operatorSignature)
+// Solidity: function registerOperator(address operator, address avs, uint32[] operatorSetIds, bytes data) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) RegisterOperator0(operator common.Address, avs common.Address, operatorSetIds []uint32, data []byte) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.RegisterOperator0(&_EORegistryCoordinator.TransactOpts, operator, avs, operatorSetIds, data)
 }
 
-// RegisterOperator0 is a paid mutator transaction binding the contract method 0xf17c5168.
+// RegisterOperator0 is a paid mutator transaction binding the contract method 0xc63fd502.
 //
-// Solidity: function registerOperator(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (bytes,bytes32,uint256) operatorSignature) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RegisterOperator0(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorSignature ISignatureUtilsSignatureWithSaltAndExpiry) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.RegisterOperator0(&_EORegistryCoordinator.TransactOpts, quorumNumbers, socket, params, operatorSignature)
+// Solidity: function registerOperator(address operator, address avs, uint32[] operatorSetIds, bytes data) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RegisterOperator0(operator common.Address, avs common.Address, operatorSetIds []uint32, data []byte) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.RegisterOperator0(&_EORegistryCoordinator.TransactOpts, operator, avs, operatorSetIds, data)
 }
 
-// RegisterOperatorWithChurn is a paid mutator transaction binding the contract method 0x5452d7a2.
+// RegisterOperatorWithChurn is a paid mutator transaction binding the contract method 0x9b5d177b.
 //
-// Solidity: function registerOperatorWithChurn(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (uint8,address)[] operatorKickParams, (bytes,bytes32,uint256) churnApproverSignature, (bytes,bytes32,uint256) operatorSignature) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) RegisterOperatorWithChurn(opts *bind.TransactOpts, quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorKickParams []ISlashingRegistryCoordinatorTypesOperatorKickParam, churnApproverSignature ISignatureUtilsSignatureWithSaltAndExpiry, operatorSignature ISignatureUtilsSignatureWithSaltAndExpiry) (*types.Transaction, error) {
+// Solidity: function registerOperatorWithChurn(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (uint8,address)[] operatorKickParams, (bytes,bytes32,uint256) churnApproverSignature, (bytes,bytes32,uint256) operatorSignature) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) RegisterOperatorWithChurn(opts *bind.TransactOpts, quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorKickParams []ISlashingRegistryCoordinatorTypesOperatorKickParam, churnApproverSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry, operatorSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry) (*types.Transaction, error) {
 	return _EORegistryCoordinator.contract.Transact(opts, "registerOperatorWithChurn", quorumNumbers, socket, params, operatorKickParams, churnApproverSignature, operatorSignature)
 }
 
-// RegisterOperatorWithChurn is a paid mutator transaction binding the contract method 0x5452d7a2.
+// RegisterOperatorWithChurn is a paid mutator transaction binding the contract method 0x9b5d177b.
 //
-// Solidity: function registerOperatorWithChurn(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (uint8,address)[] operatorKickParams, (bytes,bytes32,uint256) churnApproverSignature, (bytes,bytes32,uint256) operatorSignature) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) RegisterOperatorWithChurn(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorKickParams []ISlashingRegistryCoordinatorTypesOperatorKickParam, churnApproverSignature ISignatureUtilsSignatureWithSaltAndExpiry, operatorSignature ISignatureUtilsSignatureWithSaltAndExpiry) (*types.Transaction, error) {
+// Solidity: function registerOperatorWithChurn(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (uint8,address)[] operatorKickParams, (bytes,bytes32,uint256) churnApproverSignature, (bytes,bytes32,uint256) operatorSignature) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) RegisterOperatorWithChurn(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorKickParams []ISlashingRegistryCoordinatorTypesOperatorKickParam, churnApproverSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry, operatorSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry) (*types.Transaction, error) {
 	return _EORegistryCoordinator.Contract.RegisterOperatorWithChurn(&_EORegistryCoordinator.TransactOpts, quorumNumbers, socket, params, operatorKickParams, churnApproverSignature, operatorSignature)
 }
 
-// RegisterOperatorWithChurn is a paid mutator transaction binding the contract method 0x5452d7a2.
+// RegisterOperatorWithChurn is a paid mutator transaction binding the contract method 0x9b5d177b.
 //
-// Solidity: function registerOperatorWithChurn(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (uint8,address)[] operatorKickParams, (bytes,bytes32,uint256) churnApproverSignature, (bytes,bytes32,uint256) operatorSignature) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RegisterOperatorWithChurn(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorKickParams []ISlashingRegistryCoordinatorTypesOperatorKickParam, churnApproverSignature ISignatureUtilsSignatureWithSaltAndExpiry, operatorSignature ISignatureUtilsSignatureWithSaltAndExpiry) (*types.Transaction, error) {
+// Solidity: function registerOperatorWithChurn(bytes quorumNumbers, string socket, ((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])) params, (uint8,address)[] operatorKickParams, (bytes,bytes32,uint256) churnApproverSignature, (bytes,bytes32,uint256) operatorSignature) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RegisterOperatorWithChurn(quorumNumbers []byte, socket string, params IBLSApkRegistryTypesPubkeyRegistrationParams, operatorKickParams []ISlashingRegistryCoordinatorTypesOperatorKickParam, churnApproverSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry, operatorSignature ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry) (*types.Transaction, error) {
 	return _EORegistryCoordinator.Contract.RegisterOperatorWithChurn(&_EORegistryCoordinator.TransactOpts, quorumNumbers, socket, params, operatorKickParams, churnApproverSignature, operatorSignature)
 }
 
@@ -1711,25 +1868,25 @@ func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) RenounceOw
 	return _EORegistryCoordinator.Contract.RenounceOwnership(&_EORegistryCoordinator.TransactOpts)
 }
 
-// SetAccountIdentifier is a paid mutator transaction binding the contract method 0x143e5915.
+// SetAVS is a paid mutator transaction binding the contract method 0xa65497c6.
 //
-// Solidity: function setAccountIdentifier(address _accountIdentifier) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) SetAccountIdentifier(opts *bind.TransactOpts, _accountIdentifier common.Address) (*types.Transaction, error) {
-	return _EORegistryCoordinator.contract.Transact(opts, "setAccountIdentifier", _accountIdentifier)
+// Solidity: function setAVS(address _avs) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactor) SetAVS(opts *bind.TransactOpts, _avs common.Address) (*types.Transaction, error) {
+	return _EORegistryCoordinator.contract.Transact(opts, "setAVS", _avs)
 }
 
-// SetAccountIdentifier is a paid mutator transaction binding the contract method 0x143e5915.
+// SetAVS is a paid mutator transaction binding the contract method 0xa65497c6.
 //
-// Solidity: function setAccountIdentifier(address _accountIdentifier) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorSession) SetAccountIdentifier(_accountIdentifier common.Address) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.SetAccountIdentifier(&_EORegistryCoordinator.TransactOpts, _accountIdentifier)
+// Solidity: function setAVS(address _avs) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorSession) SetAVS(_avs common.Address) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.SetAVS(&_EORegistryCoordinator.TransactOpts, _avs)
 }
 
-// SetAccountIdentifier is a paid mutator transaction binding the contract method 0x143e5915.
+// SetAVS is a paid mutator transaction binding the contract method 0xa65497c6.
 //
-// Solidity: function setAccountIdentifier(address _accountIdentifier) returns()
-func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) SetAccountIdentifier(_accountIdentifier common.Address) (*types.Transaction, error) {
-	return _EORegistryCoordinator.Contract.SetAccountIdentifier(&_EORegistryCoordinator.TransactOpts, _accountIdentifier)
+// Solidity: function setAVS(address _avs) returns()
+func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) SetAVS(_avs common.Address) (*types.Transaction, error) {
+	return _EORegistryCoordinator.Contract.SetAVS(&_EORegistryCoordinator.TransactOpts, _avs)
 }
 
 // SetChainManager is a paid mutator transaction binding the contract method 0xd70cf0ed.
@@ -1940,6 +2097,141 @@ func (_EORegistryCoordinator *EORegistryCoordinatorSession) UpdateSocket(socket 
 // Solidity: function updateSocket(string socket) returns()
 func (_EORegistryCoordinator *EORegistryCoordinatorTransactorSession) UpdateSocket(socket string) (*types.Transaction, error) {
 	return _EORegistryCoordinator.Contract.UpdateSocket(&_EORegistryCoordinator.TransactOpts, socket)
+}
+
+// EORegistryCoordinatorAVSUpdatedIterator is returned from FilterAVSUpdated and is used to iterate over the raw logs and unpacked data for AVSUpdated events raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorAVSUpdatedIterator struct {
+	Event *EORegistryCoordinatorAVSUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *EORegistryCoordinatorAVSUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(EORegistryCoordinatorAVSUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(EORegistryCoordinatorAVSUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *EORegistryCoordinatorAVSUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *EORegistryCoordinatorAVSUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// EORegistryCoordinatorAVSUpdated represents a AVSUpdated event raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorAVSUpdated struct {
+	PrevAVS common.Address
+	NewAVS  common.Address
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterAVSUpdated is a free log retrieval operation binding the contract event 0x9770f3cadfdcbb6f93af935e86047111590c3768271d237e4a2bc0b874bed693.
+//
+// Solidity: event AVSUpdated(address prevAVS, address newAVS)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) FilterAVSUpdated(opts *bind.FilterOpts) (*EORegistryCoordinatorAVSUpdatedIterator, error) {
+
+	logs, sub, err := _EORegistryCoordinator.contract.FilterLogs(opts, "AVSUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &EORegistryCoordinatorAVSUpdatedIterator{contract: _EORegistryCoordinator.contract, event: "AVSUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchAVSUpdated is a free log subscription operation binding the contract event 0x9770f3cadfdcbb6f93af935e86047111590c3768271d237e4a2bc0b874bed693.
+//
+// Solidity: event AVSUpdated(address prevAVS, address newAVS)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchAVSUpdated(opts *bind.WatchOpts, sink chan<- *EORegistryCoordinatorAVSUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _EORegistryCoordinator.contract.WatchLogs(opts, "AVSUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(EORegistryCoordinatorAVSUpdated)
+				if err := _EORegistryCoordinator.contract.UnpackLog(event, "AVSUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAVSUpdated is a log parse operation binding the contract event 0x9770f3cadfdcbb6f93af935e86047111590c3768271d237e4a2bc0b874bed693.
+//
+// Solidity: event AVSUpdated(address prevAVS, address newAVS)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseAVSUpdated(log types.Log) (*EORegistryCoordinatorAVSUpdated, error) {
+	event := new(EORegistryCoordinatorAVSUpdated)
+	if err := _EORegistryCoordinator.contract.UnpackLog(event, "AVSUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // EORegistryCoordinatorChainManagerUpdatedIterator is returned from FilterChainManagerUpdated and is used to iterate over the raw logs and unpacked data for ChainManagerUpdated events raised by the EORegistryCoordinator contract.
@@ -2206,6 +2498,274 @@ func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchChurnApproverU
 func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseChurnApproverUpdated(log types.Log) (*EORegistryCoordinatorChurnApproverUpdated, error) {
 	event := new(EORegistryCoordinatorChurnApproverUpdated)
 	if err := _EORegistryCoordinator.contract.UnpackLog(event, "ChurnApproverUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// EORegistryCoordinatorEIP712DomainChangedIterator is returned from FilterEIP712DomainChanged and is used to iterate over the raw logs and unpacked data for EIP712DomainChanged events raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorEIP712DomainChangedIterator struct {
+	Event *EORegistryCoordinatorEIP712DomainChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *EORegistryCoordinatorEIP712DomainChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(EORegistryCoordinatorEIP712DomainChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(EORegistryCoordinatorEIP712DomainChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *EORegistryCoordinatorEIP712DomainChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *EORegistryCoordinatorEIP712DomainChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// EORegistryCoordinatorEIP712DomainChanged represents a EIP712DomainChanged event raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorEIP712DomainChanged struct {
+	Raw types.Log // Blockchain specific contextual infos
+}
+
+// FilterEIP712DomainChanged is a free log retrieval operation binding the contract event 0x0a6387c9ea3628b88a633bb4f3b151770f70085117a15f9bf3787cda53f13d31.
+//
+// Solidity: event EIP712DomainChanged()
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) FilterEIP712DomainChanged(opts *bind.FilterOpts) (*EORegistryCoordinatorEIP712DomainChangedIterator, error) {
+
+	logs, sub, err := _EORegistryCoordinator.contract.FilterLogs(opts, "EIP712DomainChanged")
+	if err != nil {
+		return nil, err
+	}
+	return &EORegistryCoordinatorEIP712DomainChangedIterator{contract: _EORegistryCoordinator.contract, event: "EIP712DomainChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchEIP712DomainChanged is a free log subscription operation binding the contract event 0x0a6387c9ea3628b88a633bb4f3b151770f70085117a15f9bf3787cda53f13d31.
+//
+// Solidity: event EIP712DomainChanged()
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchEIP712DomainChanged(opts *bind.WatchOpts, sink chan<- *EORegistryCoordinatorEIP712DomainChanged) (event.Subscription, error) {
+
+	logs, sub, err := _EORegistryCoordinator.contract.WatchLogs(opts, "EIP712DomainChanged")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(EORegistryCoordinatorEIP712DomainChanged)
+				if err := _EORegistryCoordinator.contract.UnpackLog(event, "EIP712DomainChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseEIP712DomainChanged is a log parse operation binding the contract event 0x0a6387c9ea3628b88a633bb4f3b151770f70085117a15f9bf3787cda53f13d31.
+//
+// Solidity: event EIP712DomainChanged()
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseEIP712DomainChanged(log types.Log) (*EORegistryCoordinatorEIP712DomainChanged, error) {
+	event := new(EORegistryCoordinatorEIP712DomainChanged)
+	if err := _EORegistryCoordinator.contract.UnpackLog(event, "EIP712DomainChanged", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// EORegistryCoordinatorEjectionCooldownUpdatedIterator is returned from FilterEjectionCooldownUpdated and is used to iterate over the raw logs and unpacked data for EjectionCooldownUpdated events raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorEjectionCooldownUpdatedIterator struct {
+	Event *EORegistryCoordinatorEjectionCooldownUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *EORegistryCoordinatorEjectionCooldownUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(EORegistryCoordinatorEjectionCooldownUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(EORegistryCoordinatorEjectionCooldownUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *EORegistryCoordinatorEjectionCooldownUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *EORegistryCoordinatorEjectionCooldownUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// EORegistryCoordinatorEjectionCooldownUpdated represents a EjectionCooldownUpdated event raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorEjectionCooldownUpdated struct {
+	PrevEjectionCooldown *big.Int
+	NewEjectionCooldown  *big.Int
+	Raw                  types.Log // Blockchain specific contextual infos
+}
+
+// FilterEjectionCooldownUpdated is a free log retrieval operation binding the contract event 0xa77a91bea7b6d95a8eb5a54878a1d9e3c875e26c86a9b70e3420c5c5db193b62.
+//
+// Solidity: event EjectionCooldownUpdated(uint256 prevEjectionCooldown, uint256 newEjectionCooldown)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) FilterEjectionCooldownUpdated(opts *bind.FilterOpts) (*EORegistryCoordinatorEjectionCooldownUpdatedIterator, error) {
+
+	logs, sub, err := _EORegistryCoordinator.contract.FilterLogs(opts, "EjectionCooldownUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &EORegistryCoordinatorEjectionCooldownUpdatedIterator{contract: _EORegistryCoordinator.contract, event: "EjectionCooldownUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchEjectionCooldownUpdated is a free log subscription operation binding the contract event 0xa77a91bea7b6d95a8eb5a54878a1d9e3c875e26c86a9b70e3420c5c5db193b62.
+//
+// Solidity: event EjectionCooldownUpdated(uint256 prevEjectionCooldown, uint256 newEjectionCooldown)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchEjectionCooldownUpdated(opts *bind.WatchOpts, sink chan<- *EORegistryCoordinatorEjectionCooldownUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _EORegistryCoordinator.contract.WatchLogs(opts, "EjectionCooldownUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(EORegistryCoordinatorEjectionCooldownUpdated)
+				if err := _EORegistryCoordinator.contract.UnpackLog(event, "EjectionCooldownUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseEjectionCooldownUpdated is a log parse operation binding the contract event 0xa77a91bea7b6d95a8eb5a54878a1d9e3c875e26c86a9b70e3420c5c5db193b62.
+//
+// Solidity: event EjectionCooldownUpdated(uint256 prevEjectionCooldown, uint256 newEjectionCooldown)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseEjectionCooldownUpdated(log types.Log) (*EORegistryCoordinatorEjectionCooldownUpdated, error) {
+	event := new(EORegistryCoordinatorEjectionCooldownUpdated)
+	if err := _EORegistryCoordinator.contract.UnpackLog(event, "EjectionCooldownUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2481,9 +3041,9 @@ func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseInitialized(lo
 	return event, nil
 }
 
-// EORegistryCoordinatorM2QuorumsDisabledIterator is returned from FilterM2QuorumsDisabled and is used to iterate over the raw logs and unpacked data for M2QuorumsDisabled events raised by the EORegistryCoordinator contract.
-type EORegistryCoordinatorM2QuorumsDisabledIterator struct {
-	Event *EORegistryCoordinatorM2QuorumsDisabled // Event containing the contract specifics and raw log
+// EORegistryCoordinatorM2QuorumRegistrationDisabledIterator is returned from FilterM2QuorumRegistrationDisabled and is used to iterate over the raw logs and unpacked data for M2QuorumRegistrationDisabled events raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorM2QuorumRegistrationDisabledIterator struct {
+	Event *EORegistryCoordinatorM2QuorumRegistrationDisabled // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2497,7 +3057,7 @@ type EORegistryCoordinatorM2QuorumsDisabledIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *EORegistryCoordinatorM2QuorumsDisabledIterator) Next() bool {
+func (it *EORegistryCoordinatorM2QuorumRegistrationDisabledIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2506,7 +3066,7 @@ func (it *EORegistryCoordinatorM2QuorumsDisabledIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(EORegistryCoordinatorM2QuorumsDisabled)
+			it.Event = new(EORegistryCoordinatorM2QuorumRegistrationDisabled)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2521,7 +3081,7 @@ func (it *EORegistryCoordinatorM2QuorumsDisabledIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(EORegistryCoordinatorM2QuorumsDisabled)
+		it.Event = new(EORegistryCoordinatorM2QuorumRegistrationDisabled)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2537,40 +3097,40 @@ func (it *EORegistryCoordinatorM2QuorumsDisabledIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *EORegistryCoordinatorM2QuorumsDisabledIterator) Error() error {
+func (it *EORegistryCoordinatorM2QuorumRegistrationDisabledIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *EORegistryCoordinatorM2QuorumsDisabledIterator) Close() error {
+func (it *EORegistryCoordinatorM2QuorumRegistrationDisabledIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// EORegistryCoordinatorM2QuorumsDisabled represents a M2QuorumsDisabled event raised by the EORegistryCoordinator contract.
-type EORegistryCoordinatorM2QuorumsDisabled struct {
+// EORegistryCoordinatorM2QuorumRegistrationDisabled represents a M2QuorumRegistrationDisabled event raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorM2QuorumRegistrationDisabled struct {
 	Raw types.Log // Blockchain specific contextual infos
 }
 
-// FilterM2QuorumsDisabled is a free log retrieval operation binding the contract event 0xa4cd42920ed0d1372ba4051d4577279f236fbbe677a67f3f7d645e82425dd98d.
+// FilterM2QuorumRegistrationDisabled is a free log retrieval operation binding the contract event 0x0fc3c0e6f8b4795f371e19de7f4c5733dd9e549fa8c39e5842eb66c31572d99e.
 //
-// Solidity: event M2QuorumsDisabled()
-func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) FilterM2QuorumsDisabled(opts *bind.FilterOpts) (*EORegistryCoordinatorM2QuorumsDisabledIterator, error) {
+// Solidity: event M2QuorumRegistrationDisabled()
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) FilterM2QuorumRegistrationDisabled(opts *bind.FilterOpts) (*EORegistryCoordinatorM2QuorumRegistrationDisabledIterator, error) {
 
-	logs, sub, err := _EORegistryCoordinator.contract.FilterLogs(opts, "M2QuorumsDisabled")
+	logs, sub, err := _EORegistryCoordinator.contract.FilterLogs(opts, "M2QuorumRegistrationDisabled")
 	if err != nil {
 		return nil, err
 	}
-	return &EORegistryCoordinatorM2QuorumsDisabledIterator{contract: _EORegistryCoordinator.contract, event: "M2QuorumsDisabled", logs: logs, sub: sub}, nil
+	return &EORegistryCoordinatorM2QuorumRegistrationDisabledIterator{contract: _EORegistryCoordinator.contract, event: "M2QuorumRegistrationDisabled", logs: logs, sub: sub}, nil
 }
 
-// WatchM2QuorumsDisabled is a free log subscription operation binding the contract event 0xa4cd42920ed0d1372ba4051d4577279f236fbbe677a67f3f7d645e82425dd98d.
+// WatchM2QuorumRegistrationDisabled is a free log subscription operation binding the contract event 0x0fc3c0e6f8b4795f371e19de7f4c5733dd9e549fa8c39e5842eb66c31572d99e.
 //
-// Solidity: event M2QuorumsDisabled()
-func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchM2QuorumsDisabled(opts *bind.WatchOpts, sink chan<- *EORegistryCoordinatorM2QuorumsDisabled) (event.Subscription, error) {
+// Solidity: event M2QuorumRegistrationDisabled()
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchM2QuorumRegistrationDisabled(opts *bind.WatchOpts, sink chan<- *EORegistryCoordinatorM2QuorumRegistrationDisabled) (event.Subscription, error) {
 
-	logs, sub, err := _EORegistryCoordinator.contract.WatchLogs(opts, "M2QuorumsDisabled")
+	logs, sub, err := _EORegistryCoordinator.contract.WatchLogs(opts, "M2QuorumRegistrationDisabled")
 	if err != nil {
 		return nil, err
 	}
@@ -2580,8 +3140,8 @@ func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchM2QuorumsDisab
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(EORegistryCoordinatorM2QuorumsDisabled)
-				if err := _EORegistryCoordinator.contract.UnpackLog(event, "M2QuorumsDisabled", log); err != nil {
+				event := new(EORegistryCoordinatorM2QuorumRegistrationDisabled)
+				if err := _EORegistryCoordinator.contract.UnpackLog(event, "M2QuorumRegistrationDisabled", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2602,12 +3162,12 @@ func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchM2QuorumsDisab
 	}), nil
 }
 
-// ParseM2QuorumsDisabled is a log parse operation binding the contract event 0xa4cd42920ed0d1372ba4051d4577279f236fbbe677a67f3f7d645e82425dd98d.
+// ParseM2QuorumRegistrationDisabled is a log parse operation binding the contract event 0x0fc3c0e6f8b4795f371e19de7f4c5733dd9e549fa8c39e5842eb66c31572d99e.
 //
-// Solidity: event M2QuorumsDisabled()
-func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseM2QuorumsDisabled(log types.Log) (*EORegistryCoordinatorM2QuorumsDisabled, error) {
-	event := new(EORegistryCoordinatorM2QuorumsDisabled)
-	if err := _EORegistryCoordinator.contract.UnpackLog(event, "M2QuorumsDisabled", log); err != nil {
+// Solidity: event M2QuorumRegistrationDisabled()
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseM2QuorumRegistrationDisabled(log types.Log) (*EORegistryCoordinatorM2QuorumRegistrationDisabled, error) {
+	event := new(EORegistryCoordinatorM2QuorumRegistrationDisabled)
+	if err := _EORegistryCoordinator.contract.UnpackLog(event, "M2QuorumRegistrationDisabled", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -3780,6 +4340,155 @@ func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchQuorumBlockNum
 func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseQuorumBlockNumberUpdated(log types.Log) (*EORegistryCoordinatorQuorumBlockNumberUpdated, error) {
 	event := new(EORegistryCoordinatorQuorumBlockNumberUpdated)
 	if err := _EORegistryCoordinator.contract.UnpackLog(event, "QuorumBlockNumberUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// EORegistryCoordinatorQuorumCreatedIterator is returned from FilterQuorumCreated and is used to iterate over the raw logs and unpacked data for QuorumCreated events raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorQuorumCreatedIterator struct {
+	Event *EORegistryCoordinatorQuorumCreated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *EORegistryCoordinatorQuorumCreatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(EORegistryCoordinatorQuorumCreated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(EORegistryCoordinatorQuorumCreated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *EORegistryCoordinatorQuorumCreatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *EORegistryCoordinatorQuorumCreatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// EORegistryCoordinatorQuorumCreated represents a QuorumCreated event raised by the EORegistryCoordinator contract.
+type EORegistryCoordinatorQuorumCreated struct {
+	QuorumNumber      uint8
+	OperatorSetParams ISlashingRegistryCoordinatorTypesOperatorSetParam
+	MinimumStake      *big.Int
+	StrategyParams    []IStakeRegistryTypesStrategyParams
+	StakeType         uint8
+	LookAheadPeriod   uint32
+	Raw               types.Log // Blockchain specific contextual infos
+}
+
+// FilterQuorumCreated is a free log retrieval operation binding the contract event 0xa34835bc2b673ec37fcf1591a91295b163fc2e181e4ea4e733beb27de1ceac4c.
+//
+// Solidity: event QuorumCreated(uint8 indexed quorumNumber, (uint32,uint16,uint16) operatorSetParams, uint96 minimumStake, (address,uint96)[] strategyParams, uint8 stakeType, uint32 lookAheadPeriod)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) FilterQuorumCreated(opts *bind.FilterOpts, quorumNumber []uint8) (*EORegistryCoordinatorQuorumCreatedIterator, error) {
+
+	var quorumNumberRule []interface{}
+	for _, quorumNumberItem := range quorumNumber {
+		quorumNumberRule = append(quorumNumberRule, quorumNumberItem)
+	}
+
+	logs, sub, err := _EORegistryCoordinator.contract.FilterLogs(opts, "QuorumCreated", quorumNumberRule)
+	if err != nil {
+		return nil, err
+	}
+	return &EORegistryCoordinatorQuorumCreatedIterator{contract: _EORegistryCoordinator.contract, event: "QuorumCreated", logs: logs, sub: sub}, nil
+}
+
+// WatchQuorumCreated is a free log subscription operation binding the contract event 0xa34835bc2b673ec37fcf1591a91295b163fc2e181e4ea4e733beb27de1ceac4c.
+//
+// Solidity: event QuorumCreated(uint8 indexed quorumNumber, (uint32,uint16,uint16) operatorSetParams, uint96 minimumStake, (address,uint96)[] strategyParams, uint8 stakeType, uint32 lookAheadPeriod)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) WatchQuorumCreated(opts *bind.WatchOpts, sink chan<- *EORegistryCoordinatorQuorumCreated, quorumNumber []uint8) (event.Subscription, error) {
+
+	var quorumNumberRule []interface{}
+	for _, quorumNumberItem := range quorumNumber {
+		quorumNumberRule = append(quorumNumberRule, quorumNumberItem)
+	}
+
+	logs, sub, err := _EORegistryCoordinator.contract.WatchLogs(opts, "QuorumCreated", quorumNumberRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(EORegistryCoordinatorQuorumCreated)
+				if err := _EORegistryCoordinator.contract.UnpackLog(event, "QuorumCreated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseQuorumCreated is a log parse operation binding the contract event 0xa34835bc2b673ec37fcf1591a91295b163fc2e181e4ea4e733beb27de1ceac4c.
+//
+// Solidity: event QuorumCreated(uint8 indexed quorumNumber, (uint32,uint16,uint16) operatorSetParams, uint96 minimumStake, (address,uint96)[] strategyParams, uint8 stakeType, uint32 lookAheadPeriod)
+func (_EORegistryCoordinator *EORegistryCoordinatorFilterer) ParseQuorumCreated(log types.Log) (*EORegistryCoordinatorQuorumCreated, error) {
+	event := new(EORegistryCoordinatorQuorumCreated)
+	if err := _EORegistryCoordinator.contract.UnpackLog(event, "QuorumCreated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

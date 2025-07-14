@@ -9,8 +9,8 @@ import (
 	smbase "github.com/Layr-Labs/eigensdk-go/contracts/bindings/ServiceManagerBase"
 	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
-	regcoord "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EORegistryCoordinator"
-	stakeregistry "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOStakeRegistry"
+	regcoord "github.com/eodata/operator-cli/contracts/bindings/EORegistryCoordinator"
+	stakeregistry "github.com/eodata/operator-cli/contracts/bindings/EOStakeRegistry"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	gethcommon "github.com/ethereum/go-ethereum/common"
@@ -84,9 +84,10 @@ func buildAVSClient(
 	avsClient.avsDirectoryAddr = avsDirectoryAddr
 
 	elConfig := elcontracts.Config{
-		RewardsCoordinatorAddress: 	 gethcommon.Address{},
+		AvsDirectoryAddress:         avsDirectoryAddr,
+		RewardsCoordinatorAddress:   gethcommon.Address{},
 		PermissionControllerAddress: gethcommon.Address{},
-		DontUseAllocationManager: 	 true,
+		DontUseAllocationManager:    true,
 	}
 	elReader, _, err := elcontracts.BuildReadClients(elConfig, ethClient, logger, nil)
 	if err != nil {
