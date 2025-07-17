@@ -113,10 +113,27 @@ docker-build-%: ## Build Docker image for a specific platform
 		--build-arg="BUILDPLATFORM=linux/$*" \
 		-t $(DOCKER_IMAGE):$(VERSION)-$* --platform linux/$* . -f $(BASE_DIR)/build/Dockerfile
 
-.PHONY: docker-push-no-latest
-docker-push-no-latest: ## Push Docker images without latest tag
+# Push Docker images
+.PHONY: docker-push
+docker-push:
 	docker push $(DOCKER_IMAGE):$(VERSION)-amd64
 	docker push $(DOCKER_IMAGE):$(VERSION)-arm64
+	docker manifest create $(DOCKER_IMAGE):$(VERSION) --amend $(DOCKER_IMAGE):$(VERSION)-amd64 --amend $(DOCKER_IMAGE):$(VERSION)-arm64
+	docker manifest push $(DOCKER_IMAGE):$(VERSION)
+
+.PHONY: docker-push-latest
+docker-push-latest:
+	docker tag $(DOCKER_IMAGE):$(VERSION)-amd64 $(DOCKER_IMAGE):latest-amd64
+	docker tag $(DOCKER_IMAGE):$(VERSION)-arm64 $(DOCKER_IMAGE):latest-arm64
+	docker push $(DOCKER_IMAGE):latest-amd64
+	docker push $(DOCKER_IMAGE):latest-arm64
+	docker manifest create $(DOCKER_IMAGE):latest --amend $(DOCKER_IMAGE):latest-amd64 --amend $(DOCKER_IMAGE):latest-arm64
+	docker manifest push $(DOCKER_IMAGE):latest
+	# Clean target, removes the binaries
+
+.PHONY: clean
+clean:
+	rm -rf $(BINARY_DIR)
 
 generate-bindings:
 	@echo "Generating bindings"

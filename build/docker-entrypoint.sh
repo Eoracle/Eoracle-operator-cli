@@ -5,9 +5,9 @@ set -e
 
 PROGNAME=$(basename $0)
 
-USER="eoracle"
-GROUP="eoracle"
-WORKDIR="/app/eoracle"
+USER="eodata"
+GROUP="eodata"
+WORKDIR="/app/eodata"
 STARTUP="oprcli $@"
 
 echo "$PROGNAME: Starting $STARTUP"

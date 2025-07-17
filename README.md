@@ -1,5 +1,5 @@
-# Eoracle Operator Setup
-This guide will walk you through the process of registering as an operator to Eoracle AVS.
+# EO Operator Setup
+This guide will walk you through the process of registering as an operator to EO AVS.
 
 ## Prerequisites
 1. **Registered Eigenlayer Operator Account:** Ensure you have a fully registered Eigenlayer operator account. If you don't have one, follow the steps in the [Eigenlayer User Guide](https://docs.eigenlayer.xyz/restaking-guides/restaking-user-guide) to create and fund your account.
@@ -18,20 +18,20 @@ This guide will walk you through the process of registering as an operator to Eo
   * 9090 Prometheus 
 
 ## Operator Setup
-### ​Prepare Local Eoracle data validator files
-Clone this [repo](https://github.com/Eoracle/Eoracle-operator-setup) and execute the following commands
+### ​Prepare Local EO data validator files
+Clone this [repo](https://github.com/eodata/operator-setup) and execute the following commands
 ```bash
-git clone https://github.com/Eoracle/Eoracle-operator-setup.git
-cd Eoracle-operator-setup
+git clone https://github.com/eodata/operator-setup.git
+cd operator-setup
 cp data-validator/.example_env data-validator/.env
 ```
-Copy `Eoracle-operator-setup/data-validator/.example_env` into `Eoracle-operator-setup/data-validator/.env`.  
-Edit the `Eoracle-operator-setup/data-validator/.env` and update the values for your setup
+Copy `operator-setup/data-validator/.example_env` into `operator-setup/data-validator/.env`.  
+Edit the `operator-setup/data-validator/.env` and update the values for your setup
 
 ### Generate a BLS pair (recommended)
 The register process requires two sets of private keys: an ecdsa private key and a bls private key,  
 We recommend creating a new BLS pair for security reasons.
-If you want to create a new BLS pair, you can generate a new BLS pair that will be dedicated to Eoracle
+If you want to create a new BLS pair, you can generate a new BLS pair that will be dedicated to EO
 ```bash
 ./run.sh generate-bls-key
 ```
@@ -51,8 +51,8 @@ EO_BLS_PRIVATE_KEY=<your ecdsa private key>
 EO_ECDSA_PRIVATE_KEY=<your bls private key>
 ```
 
-### Register with Eoracle AVS
-Operators need to have a minimum of 32 ETH delegated to them to opt-in to Eoracle. Execute the following command 
+### Register with EO AVS
+Operators need to have a minimum of 32 ETH delegated to them to opt-in to EO. Execute the following command 
 ```bash
 ./run.sh register
 ```
@@ -79,7 +79,7 @@ Failed to create RegisterOperator transaction execution reverted: AVSDirectory.r
 Please add EO_SALT=<salt_in_hex> field to your .env file and retry runnning register.  
 (*) the EO_SALT should be in the following format EO_SALT=0x04 (even length hex number, and could be any number but must be even length)
 
-### Checking the status of Eoracle operator AVS
+### Checking the status of EO operator AVS
 The following command will print the status of the operator
 ```bash
 ./run.sh print-status
