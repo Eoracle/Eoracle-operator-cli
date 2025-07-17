@@ -3,14 +3,15 @@ package cmd
 import (
 	"context"
 	"fmt"
-	eoconfig "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOConfig"
+	"math/big"
+
+	eoconfig "github.com/eodata/operator-cli/contracts/bindings/EOConfig"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/urfave/cli/v2"
-	"math/big"
 )
 
 func NewPrintStatusCommand() *cli.Command {
@@ -60,7 +61,7 @@ func runPrintStatus(c *cli.Context) error {
 		return err
 	}
 
-	eoChainEthClient, err := createEthClient(c.String(EOChainRPCFlag.Name))
+	eoChainEthClient, err := createEthClient(profile.EOChainRPCEndpoint)
 	if err != nil {
 		return err
 	}

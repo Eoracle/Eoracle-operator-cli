@@ -628,25 +628,6 @@
   },
   {
     "type": "function",
-    "name": "isOperatorSetQuorum",
-    "inputs": [
-      {
-        "name": "quorumNumber",
-        "type": "uint8",
-        "internalType": "uint8"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "minimumStakeForQuorum",
     "inputs": [
       {
@@ -729,7 +710,7 @@
       {
         "name": "",
         "type": "address",
-        "internalType": "address"
+        "internalType": "contract ISlashingRegistryCoordinator"
       }
     ],
     "stateMutability": "view"
@@ -949,29 +930,63 @@
   },
   {
     "type": "function",
-    "name": "updateOperatorStake",
+    "name": "updateOperatorsStake",
     "inputs": [
       {
-        "name": "operator",
-        "type": "address",
-        "internalType": "address"
+        "name": "operators",
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "name": "operatorId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "name": "operatorIds",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
       },
       {
-        "name": "quorumNumbers",
-        "type": "bytes",
-        "internalType": "bytes"
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
       }
     ],
     "outputs": [
       {
         "name": "",
-        "type": "uint192",
-        "internalType": "uint192"
+        "type": "bool[]",
+        "internalType": "bool[]"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "updateOperatorsStake",
+    "inputs": [
+      {
+        "name": "operators",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "operatorIds",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      },
+      {
+        "name": "quorumNumber",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "operatorSetId",
+        "type": "uint32",
+        "internalType": "uint32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool[]",
+        "internalType": "bool[]"
       }
     ],
     "stateMutability": "nonpayable"
@@ -1189,6 +1204,11 @@
   },
   {
     "type": "error",
+    "name": "LookAheadPeriodTooLong",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "OnlySlashingRegistryCoordinator",
     "inputs": []
   },
@@ -1205,6 +1225,11 @@
   {
     "type": "error",
     "name": "QuorumDoesNotExist",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "QuorumNotSlashable",
     "inputs": []
   }
 ]

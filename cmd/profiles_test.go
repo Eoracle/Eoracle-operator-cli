@@ -2,10 +2,11 @@ package cmd
 
 import (
 	flaglib "flag"
+	"testing"
+
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
-	"testing"
 )
 
 func TestFromArgs(t *testing.T) {
@@ -86,7 +87,8 @@ func TestOverrideAddress(t *testing.T) {
 			err := set.Parse(tt.args)
 			assert.NoError(t, err)
 
-			setProfile(c)
+			err = setProfile(c)
+			assert.NoError(t, err)
 
 			if tt.expectedError {
 				assert.Error(t, err)

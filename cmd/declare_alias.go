@@ -3,10 +3,11 @@ package cmd
 import (
 	"context"
 	"crypto/ecdsa"
+
 	"github.com/Layr-Labs/eigensdk-go/chainio/clients/wallet"
 	"github.com/Layr-Labs/eigensdk-go/chainio/txmgr"
 	"github.com/Layr-Labs/eigensdk-go/signerv2"
-	eoconfig "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EOConfig"
+	eoconfig "github.com/eodata/operator-cli/contracts/bindings/EOConfig"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/urfave/cli/v2"

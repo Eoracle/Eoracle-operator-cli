@@ -4,20 +4,21 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"math/big"
+	"path/filepath"
+	"strings"
+
 	"github.com/Layr-Labs/eigensdk-go/chainio/clients/wallet"
 	"github.com/Layr-Labs/eigensdk-go/chainio/txmgr"
 	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
 	"github.com/Layr-Labs/eigensdk-go/signerv2"
 	"github.com/consensys/gnark-crypto/ecc/bn254"
-	regcoord "github.com/eoracle/eoracle-operator-cli/contracts/bindings/EORegistryCoordinator"
+	regcoord "github.com/eodata/operator-cli/contracts/bindings/EORegistryCoordinator"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/urfave/cli/v2"
-	"math/big"
-	"path/filepath"
-	"strings"
 )
 
 func NewRegisterCommand() *cli.Command {
@@ -82,11 +83,6 @@ func runRegister(c *cli.Context) error {
 		return err
 	}
 
-	chainValidatorG1PointSignature, err := getChainValidatorG1PointSignature(c)
-	if err != nil {
-		return err
-	}
-
 	avsClient, err := buildAVSClient(ethClient)
 	if err != nil {
 		utils.Fatalf("Error creating AVS client %v", err)
@@ -105,7 +101,6 @@ func runRegister(c *cli.Context) error {
 
 	pubkeyRegParams := regcoord.IBLSApkRegistryTypesPubkeyRegistrationParams{
 		PubkeyRegistrationSignature: signedMsg,
-		ChainValidatorSignature:     chainValidatorG1PointSignature,
 		PubkeyG1:                    G1pubkeyBN254,
 		PubkeyG2:                    G2pubkeyBN254,
 	}
@@ -137,7 +132,7 @@ func runRegister(c *cli.Context) error {
 	}
 
 	operatorSignature[64] += 27
-	operatorSignatureWithSaltAndExpiry := regcoord.ISignatureUtilsSignatureWithSaltAndExpiry{
+	operatorSignatureWithSaltAndExpiry := regcoord.ISignatureUtilsMixinTypesSignatureWithSaltAndExpiry{
 		Signature: operatorSignature,
 		Salt:      saltBytes,
 		Expiry:    expiry,
@@ -169,7 +164,7 @@ func runRegister(c *cli.Context) error {
 
 	noSendTxOpts.GasLimit = 2_000_000
 
-	tx, err := avsClient.registryCoordinator.RegisterOperator0(
+	tx, err := avsClient.registryCoordinator.RegisterOperator(
 		noSendTxOpts,
 		[]byte{0},
 		"0.0.0.0:0",

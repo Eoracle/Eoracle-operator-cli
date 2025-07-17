@@ -35,11 +35,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Run GoReleaser build
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: '1.21.13'
-          args: build --clean --parallelism 3 --config build/.goreleaser-operatorcli.yml
+      - name: Build Operator CLI
+        run: |
+          make build-oprcli-arm64
+          make build-oprcli-amd64
 
       - name: Check if the release already exists
         id: check_release
@@ -56,10 +55,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build and push Docker images
+        run: |
+          make docker-build-arm64
+          make docker-build-amd64
+          make docker-push-no-latest
+
       - name: Run GoReleaser Release
         uses: goreleaser/goreleaser-action@v6
         with:
-          version: '1.21.13'
+          version: latest
           args: release --clean --parallelism 3 --config build/.goreleaser-operatorcli.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+
 	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
 	"github.com/ethereum/go-ethereum/cmd/utils"
 	"github.com/urfave/cli/v2"
