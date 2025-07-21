@@ -9,6 +9,7 @@ import (
 
 	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
+	"github.com/eodata/operator-cli/cmd/flags"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -41,7 +42,7 @@ func ListEcdsaAddresses(keystorePath string) ([]string, error) {
 
 	ecdsaKeys := make([]string, 0)
 	for _, file := range files {
-		if strings.HasSuffix(file.Name(), Suffix) {
+		if strings.HasPrefix(file.Name(), EcdsaPrefix) && file.Name() != EcdsaPrefix+Suffix {
 			ecdsaKeys = append(
 				ecdsaKeys,
 				strings.TrimPrefix(strings.TrimSuffix(file.Name(), Suffix), EcdsaPrefix),
