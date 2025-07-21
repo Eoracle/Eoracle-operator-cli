@@ -1,4 +1,4 @@
-package cmd
+package flags
 
 import (
 	flaglib "flag"
@@ -6,7 +6,7 @@ import (
 
 	gethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func TestFromArgs(t *testing.T) {
@@ -42,7 +42,7 @@ func TestFromArgs(t *testing.T) {
 			c := cli.NewContext(nil, set, nil)
 			err := set.Parse(tt.args)
 			assert.NoError(t, err)
-			err = setProfile(c)
+			err = SetProfile(c)
 			assert.NoError(t, err)
 
 			if tt.expectedError {
