@@ -8,7 +8,7 @@ builds:
 
     # Path to the main.go file or the directory containing the main package.
     # You can specify multiple paths if your project consists of multiple binaries.
-    main: ./main.go
+    main: ./cmd/main.go
 
     # Target platforms
     goos:
@@ -37,10 +37,10 @@ dockers:
       - "build"
       - "cmd"
       - "contracts"
+      - "internal"
       - "go.mod"
       - "go.sum"
       - "Makefile"
-      - "main.go"
     goos: linux
     goarch: amd64
     build_flag_templates:
@@ -59,10 +59,10 @@ dockers:
       - "build"
       - "cmd"
       - "contracts"
+      - "internal"
       - "go.mod"
       - "go.sum"
       - "Makefile"
-      - "main.go"
     goos: linux
     goarch: arm64
     build_flag_templates:

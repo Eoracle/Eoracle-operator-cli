@@ -95,12 +95,12 @@ build: build-oprcli ## Build the oprcli binary
 .PHONY: build-oprcli
 build-oprcli: check-go ## Build oprcli binary
 	$(info $(M) Building oprcli binary...)
-	$Q $(GO) build -o $(BASE_DIR)/bin/oprcli $(SRC_DIR)/main.go
+	$Q $(GO) build -o $(BASE_DIR)/bin/oprcli $(SRC_DIR)/cmd/main.go
 
 .PHONY: build-oprcli-%
 build-oprcli-%: check-go ## Build oprcli binary for a specific platform
 	$(info $(M) Building oprcli binary for $*...)
-	$Q GOOS=linux GOARCH=$* $(GO) build -o $(BASE_DIR)/bin/oprcli-$* $(SRC_DIR)/main.go
+	$Q GOOS=linux GOARCH=$* $(GO) build -o $(BASE_DIR)/bin/oprcli-$* $(SRC_DIR)/cmd/main.go
 
 # --- Docker ---
 .PHONY: docker-build

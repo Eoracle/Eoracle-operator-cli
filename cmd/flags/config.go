@@ -1,4 +1,4 @@
-package cmd
+package flags
 
 import (
 	"github.com/Layr-Labs/eigensdk-go/logging"
@@ -7,7 +7,7 @@ import (
 
 var (
 	profile   *NetworkProfile
-	logger, _ = logging.NewZapLogger(logging.Production)
+	Logger, _ = logging.NewZapLogger(logging.Production)
 )
 
 type NetworkProfile struct {
