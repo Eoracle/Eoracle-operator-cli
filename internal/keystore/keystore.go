@@ -9,7 +9,6 @@ import (
 
 	eigensdkbls "github.com/Layr-Labs/eigensdk-go/crypto/bls"
 	eigensdkecdsa "github.com/Layr-Labs/eigensdk-go/crypto/ecdsa"
-	"github.com/eodata/operator-cli/cmd/flags"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
